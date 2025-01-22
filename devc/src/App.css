@@ -15,7 +15,6 @@ header nav:hover{
         justify-content: center;
         gap: .5rem;
         transform: scale(1.4);
-        margin-bottom: 5vh;
     }
 
     .search-input{
