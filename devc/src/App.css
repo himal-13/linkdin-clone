@@ -1,0 +1,32 @@
+header nav{
+    color:#555;
+    cursor: pointer;
+    font-weight: 700;
+}
+header nav:hover{
+    color: black;
+}
+.search-icon{
+    display: none;
+}
+
+@media screen and (max-width:700px){
+    .header{
+        justify-content: center;
+        gap: .5rem;
+        transform: scale(1.4);
+        margin-bottom: 5vh;
+    }
+
+    .search-input{
+        display: none;
+    }
+    .search-icon{
+        display: block;
+    }
+    header nav span{ 
+        display: none;
+        
+    }
+    
+}
