@@ -4,6 +4,7 @@ import Leftbar from "./section-components/Leftbar"
 import {  useEffect, useState } from "react"
 import { useAuth } from "./context/AuthContext"
 import { User } from "firebase/auth"
+import Newsfeed from "./section-components/Newsfeed"
 
 const App = () => {
   const[currentUser,setCurrentUser] = useState<User |null>(null)
@@ -15,14 +16,19 @@ const App = () => {
       setCurrentUser(user)
 
     }
-    setLoading(false)
 
   }
 
   useEffect(()=>{
-    fetchUser();
+    const fetchData = async()=>{
+    await fetchUser();
+    setLoading(false)
+    console.log(currentUser)
 
-  })
+    }
+    fetchData()
+
+  },[])
 
 
   return (
@@ -30,8 +36,9 @@ const App = () => {
       {!loading?(
         <>
           <Navbar/>
-        <main className="bg-gray-300 py-4 min-h-screen flex justify-center">
+        <main className="bg-gray-300 py-4 min-h-screen flex justify-center gap-[5vw]">
           <Leftbar/>
+          <Newsfeed/>
         
         </main></>):(
           <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">Loading...</h1>
