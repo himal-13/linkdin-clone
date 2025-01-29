@@ -2,20 +2,14 @@ import Navbar from "./section-components/Navbar"
 import './App.css'
 import Leftbar from "./section-components/Leftbar"
 import {  useEffect, useState } from "react"
-import { useAuth } from "./context/AuthContext"
-import { User } from "firebase/auth"
 import Newsfeed from "./section-components/Newsfeed"
 
 const App = () => {
-  const[currentUser,setCurrentUser] = useState<User |null>(null)
   const[loading,setLoading] = useState(true)
-  const{user} = useAuth();
+  // const{user} = useAuth();
 
   const fetchUser = async()=>{
-    if(user){
-      setCurrentUser(user)
-
-    }
+ 
 
   }
 
@@ -23,7 +17,6 @@ const App = () => {
     const fetchData = async()=>{
     await fetchUser();
     setLoading(false)
-    console.log(currentUser)
 
     }
     fetchData()
@@ -36,8 +29,9 @@ const App = () => {
       {!loading?(
         <>
           <Navbar/>
-        <main className="bg-gray-300 py-4 min-h-screen flex justify-center gap-[5vw]">
-          <Leftbar/>
+        <main className="bg-gray-300 py-4 min-h-screen flex justify-center gap-[5vw] relative top-[10vh]">
+          <Leftbar/>    
+
           <Newsfeed/>
         
         </main></>):(

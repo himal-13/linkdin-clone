@@ -12,7 +12,7 @@ const Leftbar = () => {
 
 
   return (
-    <section className="w-[300px] bg-white max-h-fit relative rounded-2xl">
+    <section className="w-[300px] bg-white h-fit relative rounded-2xl">
         <div className="h-[8vh] bg-stone-500"></div>
         <div className="text-center absolute top-[5vh] left-[50%] -translate-x-1/2 flex flex-col justify-center items-center">
             <img src="./assets/profile.jpg" height={70} width={70} className="rounded-full border-2 border-blue-600" alt="" />

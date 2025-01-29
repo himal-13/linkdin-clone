@@ -17,20 +17,25 @@ export const AuthContext = createContext<AuthContextType | null>(null)
 
  const AuthProvider:React.FC<AuthProviderType> =({children})=>{
     const[user,setUser] = useState< User |null>(null)
+    const[loading,setLoading] = useState(true)
 
 
 
     useEffect(()=>{
+        setLoading(true)
         const unSubscribe = onAuthStateChanged(auth,(curentUser)=>{
             setUser(curentUser)
+
         })
+        setLoading(false)
+
         return ()=>unSubscribe()
 
     },[])
 
     return(
         <AuthContext.Provider value={{user}}>
-            { children}
+            {!loading && children}
         </AuthContext.Provider>
         
        
