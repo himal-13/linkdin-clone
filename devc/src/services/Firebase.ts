@@ -9,12 +9,12 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_APIKEY}`,
-  authDomain: `${import.meta.env.VITE_AUTHDOMAIN}`,
+  authDomain: `devc-seven.vercel.app`,
   projectId: `${import.meta.env.VITE_PROJECTID}`,
   storageBucket: `${import.meta.env.VITE_STORAGE}`,
   messagingSenderId: `${import.meta.env.VITE_MSGSENDINGID}`,
   appId: `${import.meta.env.VITE_APPID}`
-  
+
 };
 
 // Initialize Firebase
