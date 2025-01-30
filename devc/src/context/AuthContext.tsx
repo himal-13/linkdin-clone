@@ -1,7 +1,8 @@
 import {  onAuthStateChanged, User } from "firebase/auth";
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { auth} from "../services/Firebase";
+import { auth, } from "../services/Firebase";
 import React from "react";
+// import { collection, getDoc, getDocs } from "firebase/firestore";
 
 
 interface AuthContextType{
@@ -18,15 +19,22 @@ export const AuthContext = createContext<AuthContextType | null>(null)
  const AuthProvider:React.FC<AuthProviderType> =({children})=>{
     const[user,setUser] = useState< User |null>(null)
     const[loading,setLoading] = useState(true)
+    // const[userName,setUserName] = useState('')
 
+      
+    // const getUserName = async()=>{
+    //     setLoading(true)
+    //     const document = await  getDocs(collection(db,'users'))
+        
 
-
+    // }
     useEffect(()=>{
         setLoading(true)
         const unSubscribe = onAuthStateChanged(auth,(curentUser)=>{
             setUser(curentUser)
 
         })
+    
         setLoading(false)
 
         return ()=>unSubscribe()

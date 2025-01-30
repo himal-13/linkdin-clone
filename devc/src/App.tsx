@@ -3,12 +3,19 @@ import './App.css'
 import Leftbar from "./section-components/Leftbar"
 import {  useEffect, useState } from "react"
 import Newsfeed from "./section-components/Newsfeed"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "./context/AuthContext"
 
 const App = () => {
   const[loading,setLoading] = useState(true)
-  // const{user} = useAuth();
+  const{user} = useAuth();
+  const navigate = useNavigate();
 
   const fetchUser = async()=>{
+    if(!user){
+      navigate('/login')
+
+    }
  
 
   }

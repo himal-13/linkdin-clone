@@ -2,12 +2,19 @@ import { FaLinkedin } from "react-icons/fa"
 import { useAuth } from "../context/AuthContext"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../services/Firebase"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { auth, db } from "../services/Firebase"
+import { addDoc, collection, getDocs } from "firebase/firestore"
 
 interface FormData{
     email:string,
     password:string
+}
+interface UserType{
+  id:string,
+  email:string,
+  userName:string,
+  userId:string
 }
 
 const Login = () => {
@@ -15,6 +22,7 @@ const Login = () => {
         email: "",
         password: "",
       });
+      const[userName,setUserName] = useState('')
 
     const[loading,setLoading] = useState(true)
     const navigate = useNavigate()
@@ -42,15 +50,49 @@ const Login = () => {
       }
 
       useEffect(() => {
-  ;
     
         fetchUser();
       }, [user, navigate]);
+
+      const fetchUserNames = async()=>{
+              try{
+                    const querrySnapshot = await getDocs(collection(db,'users'));
+                    const fetchData = querrySnapshot.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data(), 
+                      })as UserType)
+                      const allUserNames =fetchData.map((nam)=>nam.userName)
+                      if(allUserNames && allUserNames.includes(userName.toLowerCase())){
+                        setErrorSubmit("user name exist")
+                      }else{
+                        setErrorSubmit('')
+                      }
+                      
+                }catch(er){
+                    // console.log(er)
+                
+                }
+
+      }
+      const checkUserName = ()=>{
+
+      }
+
+      useEffect(()=>{
+        const fetchUserNamesData=async()=>{
+         await fetchUserNames()
+
+        }
+        fetchUserNamesData()
+        checkUserName()
+      
+
+      },[userName])
     
       const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
-        if (!formData.password.trim() || !formData.email.trim()) {
+        if (!formData.password.trim() || !formData.email.trim() && !errorSubmit) {
           setErrorSubmit("Please fill both input fields");
           return;
         }
@@ -62,7 +104,16 @@ const Login = () => {
           if (mode === "login") {
             await signInWithEmailAndPassword(auth, formData.email, formData.password);
           } else {
-            await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+
+            const credentials =await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+            const userData = credentials.user
+            //adding user to firestrore for signup
+            await addDoc(collection(db,'users'),{
+              userName:userName,
+              email:formData.email,
+
+            })
+            await updateProfile(userData,{displayName:userName})
           }
         } catch (error: any) {
           console.log(`Error message: ${error.message}`);
@@ -97,6 +148,7 @@ const Login = () => {
         <h5 className="text-[13px]">{mode==='login'?'Stay updated on your professional world.':"Make the most of your professional life."}</h5>
         <p className="text-[12px] bg-red-700  text-white">{errorSubmit}</p>
         <form className="my-3 flex flex-col" onSubmit={handleSubmit}>
+            {mode==='signup' && (<input type="text" onChange={(e)=>setUserName(e.target.value)} value={userName} name="userName" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="userName" />)}
             <input type="text" onChange={handleChange} value={formData.email} name="email" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="Email" />
             <input type="password" onChange={handleChange} value={formData.password} name="password" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="Password" />
             <div className="">

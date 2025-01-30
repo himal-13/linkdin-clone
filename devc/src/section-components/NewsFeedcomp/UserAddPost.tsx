@@ -27,7 +27,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
     try{
       await addDoc(collection(db, "posts"), {
         content:postInput,
-        userId:user.uid,
+        userId:user.displayName??'Anonymous user',
         createdAt: serverTimestamp(),
         likes: 0,
         likedBy: [],

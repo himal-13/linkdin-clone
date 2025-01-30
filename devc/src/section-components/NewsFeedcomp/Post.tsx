@@ -20,7 +20,6 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
   useEffect(() => {
     setLikes(post.likes);
     setLikedBy(post.likedBy || []);
-    console.log('user id')
   }, [post.likes, post.likedBy]);
 
   const updateLikes = useCallback(async () => {
@@ -64,7 +63,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
       <header className="flex text-2xl justify-between">
         <section className="flex items-center gap-2">
           <MdAccountBox />
-          <h3>{post.userId.toString()}</h3>
+          <h3 className="text-[15px]">{post.userId??'Anonymous user'}</h3>
         </section>
         <BsThreeDots />
       </header>
