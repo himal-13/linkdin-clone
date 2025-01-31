@@ -35,12 +35,14 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
         updatePost()
     }
     const handleEdit = async()=>{
-        if(!editInput.trim()){
+        if(!editInput.trim() && editInput !==post.content){
             return;
         }
         const postRef = doc(db,'posts',post.id)
         await updateDoc(postRef,{
-            content:editInput
+            content:editInput,
+            edited:true,
+
         })
         setEditMode(false)
         updatePost();
@@ -77,7 +79,7 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
                 <div className="flex justify-center items-center flex-col gap-3 bg-slate-50 p-4">
                     <input type="text" className="border-[1px] border-black px-2 py-1 text-xl " placeholder="write something" value={editInput} onChange={(e)=>setEditInput(e.target.value)}  />
                     <section>
-                        <button onClick={handleEdit} className={`bg-blue-600 text-white px-2 py-1 text-xl ${!editInput.trim() && 'bg-gray-500'}`} disabled={!editInput.trim()}>save</button>
+                        <button onClick={handleEdit} className={`bg-blue-600 text-white px-2 py-1 text-xl ${!editInput.trim() && editInput===post.content && 'bg-gray-500'}`} disabled={!editInput.trim()}>save</button>
                         <button className="bg-gray-200 px-2 py-1 text-xl" onClick={cancelBtn}>cancel</button>
 
                     </section>

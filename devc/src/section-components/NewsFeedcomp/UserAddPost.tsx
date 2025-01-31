@@ -31,7 +31,8 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
         createdAt: serverTimestamp(),
         likes: 0,
         likedBy: [],
-        repost:0
+        repost:0,
+        edited:false,
       });
       setPostInput('')
       setAddPostMode(false)

@@ -64,7 +64,10 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
       <header className="flex text-2xl justify-between">
         <section className="flex items-center gap-2">
           <MdAccountBox />
-          <h3 className="text-[15px]">{post.userId??'Anonymous user'}</h3>
+          <h3 className="text-[15px]">{post.userId??'Anonymous user'} </h3>
+          <h4 className="-translate-y-2 font-bold ">.</h4>
+          <h4 className="text-xs">{post.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</h4>
+          {post.edited &&<><h4 className="-translate-y-2 font-bold ">.</h4> <h4 className="text-xs">edited</h4></>}
         </section>
         <PostThreeDot updatePost={postUpdated} post={post}/>
       </header>

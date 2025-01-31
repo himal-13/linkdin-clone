@@ -13,7 +13,8 @@ export interface PostType{
     likedBy:string[],
     likes:number,
     repost:number,
-    userId:string
+    userId:string,
+    edited:boolean
 
 }
 
