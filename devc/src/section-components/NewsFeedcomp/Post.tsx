@@ -1,6 +1,6 @@
 import { MdAccountBox,} from "react-icons/md";
 import { PostType } from "../Newsfeed";
-import { BiComment, BiHeart, BiRepost,  } from "react-icons/bi";
+import { BiComment, BiHeart, BiRepost, BiWorld,  } from "react-icons/bi";
 import { CiBookmark } from "react-icons/ci";
 import { arrayRemove, arrayUnion, doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
@@ -62,12 +62,18 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
   return (
     <div className="my-2 p-2 bg-white rounded-lg">
       <header className="flex text-2xl justify-between">
-        <section className="flex items-center gap-2">
-          <MdAccountBox />
-          <h3 className="text-[15px]">{post.userId??'Anonymous user'} </h3>
-          <h4 className="-translate-y-2 font-bold ">.</h4>
-          <h4 className="text-xs">{post.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</h4>
-          {post.edited &&<><h4 className="-translate-y-2 font-bold ">.</h4> <h4 className="text-xs">edited</h4></>}
+        <section className="flex  gap-2">
+          <MdAccountBox className="text-3xl" />
+          <div className="flex flex-col justify-center ">
+            <span className="text-[15px] ">{post.userId} </span>
+            <div className="flex gap-1 items-center -my-4">
+              <span className="text-xs">{post.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              {post.edited &&<><span className="-translate-y-2 font-bold ">.</span> <span className="text-xs">edited</span></>}
+              <span className="-translate-y-2 font-bold ">.</span>
+              <BiWorld className="text-sm"/>
+
+              
+          </div></div>
         </section>
         <PostThreeDot updatePost={postUpdated} post={post}/>
       </header>

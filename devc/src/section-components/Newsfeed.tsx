@@ -4,6 +4,7 @@ import UserAddPost from "./NewsFeedcomp/UserAddPost"
 import { collection, getDocs, Timestamp } from "firebase/firestore"
 import { db } from "../services/Firebase"
 import Post from "./NewsFeedcomp/Post"
+import PostSkeleton from "./NewsFeedcomp/PostSkeleton"
 
 
 export interface PostType{
@@ -20,8 +21,10 @@ export interface PostType{
 
 const Newsfeed = () => {
     const[posts,setPosts]= useState<PostType[]>([])
+    const[loading,setLoading] = useState(true)
 
     const fetchPost =async()=>{
+      setLoading(true)
         try{
             const querrySnapshot = await getDocs(collection(db,'posts'));
             const fetchData =querrySnapshot.docs.map((doc) => ({
@@ -32,6 +35,8 @@ const Newsfeed = () => {
         }catch(er){
             // console.log(er)
         
+        }finally{
+          setLoading(false)
         }
     }
 
@@ -45,11 +50,20 @@ const Newsfeed = () => {
     <div className="min-h-screen w-[40%] ">
         <UserAddPost handleLoading={async()=>{await fetchPost()}}/>
         <Divider/>
-        <div className="p-3  ">
+        {loading?(
+          [1,2,3,4,5].map((pos)=>(
+            <PostSkeleton key={pos}/>
+          ))
+          
+        ):(
+          <div className="p-3  ">
           {posts && posts.map((post)=>(
             <Post post={post} key={post.id} postUpdated={async()=>{await fetchPost()}} />
           ))}
         </div>
+        )
+      }
+    
         
 
     </div>

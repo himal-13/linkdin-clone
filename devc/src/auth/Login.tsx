@@ -111,6 +111,10 @@ const Login = () => {
             await addDoc(collection(db,'users'),{
               userName:userName,
               email:formData.email,
+              blocked:[],
+              following:[],
+              followers:[],
+              savedPost:[]
 
             })
             await updateProfile(userData,{displayName:userName})
