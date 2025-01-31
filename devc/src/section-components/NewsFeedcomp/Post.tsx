@@ -1,13 +1,14 @@
-import { MdAccountBox } from "react-icons/md";
+import { MdAccountBox,} from "react-icons/md";
 import { PostType } from "../Newsfeed";
-import { BsThreeDots } from "react-icons/bs";
-import { BiComment, BiHeart, BiRepost, BiSave } from "react-icons/bi";
+import { BiComment, BiHeart, BiRepost,  } from "react-icons/bi";
+import { CiBookmark } from "react-icons/ci";
 import { arrayRemove, arrayUnion, doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { FaHeart } from "react-icons/fa";
+import PostThreeDot from "./PostThreeDot";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user} = useAuth();
@@ -65,7 +66,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <MdAccountBox />
           <h3 className="text-[15px]">{post.userId??'Anonymous user'}</h3>
         </section>
-        <BsThreeDots />
+        <PostThreeDot updatePost={postUpdated} post={post}/>
       </header>
       
       <main>
@@ -93,8 +94,8 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
             <span>0</span>
           </button>
           
-          <button className="cursor-pointer flex flex-col items-center text-[15px] p-2">
-            <BiSave />
+          <button className="cursor-pointer flex flex-col items-center text-[16px] font-bold p-2">
+          <CiBookmark />
           </button>
         </section>
       </main>

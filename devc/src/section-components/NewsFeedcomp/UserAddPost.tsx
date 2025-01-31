@@ -46,7 +46,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
   return (
     <div className="bg-white p-5 w-full">
         <section className="flex gap-4 w-full ">
-            <img src="./assets/profile.jpg" height={50} width={50} className="rounded-full border-2 border-blue-600" alt="" />
+            <img src="./src/assets/profile-img/profile.jpg" height={50} width={50} className="rounded-full border-2 border-blue-600" alt="" />
               {addPostMode?(
                 <div className="flex w-full gap-2">
                   <input type="text" placeholder="Add your content" value={postInput} onChange={(e)=>setPostInput(e.target.value)} className="px-3 rounded-full border-2 border-black flex-1 text-start font-bold" />
