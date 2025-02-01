@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/Firebase";
 import { useNavigate } from "react-router-dom";
+import { CiLogout } from "react-icons/ci";
 
 const Leftbar = () => {
   const{user} = useAuth()
@@ -29,7 +30,8 @@ const Leftbar = () => {
 
         </div>
         <div className="">
-            <button className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100" onClick={async()=>{await signOut(auth); navigate('/login')}}><GiSaveArrow /> <span>Saved post</span></button>
+            <button className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100" ><GiSaveArrow /> <span>Saved post</span></button>
+            <button className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100 hover:rounded-lg" onClick={async()=>{await signOut(auth); navigate('/login')}}><CiLogout/> <span>Log out</span></button>
         </div>
 
         

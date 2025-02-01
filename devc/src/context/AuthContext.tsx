@@ -1,14 +1,26 @@
 import {  onAuthStateChanged, User } from "firebase/auth";
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { auth, } from "../services/Firebase";
+import { auth, db, } from "../services/Firebase";
 import React from "react";
+import { collection, getDocs } from "firebase/firestore";
 // import { collection, getDoc, getDocs } from "firebase/firestore";
 
 
 interface AuthContextType{
     user:User | null,
+    dbUser:dbUser | undefined,
+    fetchdbUser:()=>void
 
 
+}
+interface dbUser{
+    id:string
+    userName:string,
+    email:string,
+    blocked:[],
+    following:string[],
+    followers:[],
+    savedPost:string[]
 }
 interface AuthProviderType{
     children:ReactNode
@@ -19,15 +31,8 @@ export const AuthContext = createContext<AuthContextType | null>(null)
  const AuthProvider:React.FC<AuthProviderType> =({children})=>{
     const[user,setUser] = useState< User |null>(null)
     const[loading,setLoading] = useState(true)
-    // const[userName,setUserName] = useState('')
+    const[dbUser,setdbUser] = useState<dbUser | undefined>()
 
-      
-    // const getUserName = async()=>{
-    //     setLoading(true)
-    //     const document = await  getDocs(collection(db,'users'))
-        
-
-    // }
     useEffect(()=>{
         setLoading(true)
         const unSubscribe = onAuthStateChanged(auth,(curentUser)=>{
@@ -40,9 +45,26 @@ export const AuthContext = createContext<AuthContextType | null>(null)
         return ()=>unSubscribe()
 
     },[])
+    const fetchdbUser = async()=>{
+        if(user){
+            const userSnapshot =await getDocs(collection(db,'users'))
+            const fetchData = userSnapshot.docs.map((d)=>({
+                id:d.id,
+                ...d.data()
+
+            })as dbUser)
+            setdbUser(fetchData.find((d)=>d.email == user.email))
+
+        }
+    }
+    
+    useEffect(()=>{
+        fetchdbUser()
+
+    },[user])
 
     return(
-        <AuthContext.Provider value={{user}}>
+        <AuthContext.Provider value={{user,dbUser,fetchdbUser}}>
             {!loading && children}
         </AuthContext.Provider>
         

@@ -1,18 +1,20 @@
 import { BsThreeDots } from "react-icons/bs"
 import { PostType } from "../Newsfeed"
-import { BiEdit } from "react-icons/bi"
+import { BiBookmark, BiEdit } from "react-icons/bi"
 import { MdDelete } from "react-icons/md"
 import { useEffect, useState } from "react"
 import { useAuth } from "../../context/AuthContext"
-import { deleteDoc, doc, updateDoc } from "firebase/firestore"
+import {  arrayUnion, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../services/Firebase"
+import { FaBookmark } from "react-icons/fa"
 
 const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
     const[itsmyPost,setitmyPost] = useState(false)
     const[showMenu,setshowMenu] = useState(false)
     const[editMode,setEditMode] = useState(false)
     const[editInput,setEditInput] = useState(post.content)
-    const{user} =useAuth()
+    const{user,dbUser,fetchdbUser} =useAuth()
+    const[postSaved,setPostSaved] = useState<boolean | undefined>()
 
     useEffect(()=>{
         if(user){
@@ -21,6 +23,12 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
             }else{
                 setitmyPost(false)
             }
+        }
+        if(!dbUser) return;
+        if(dbUser.savedPost.includes(post.id)){
+            setPostSaved(true)
+        }else{
+            setPostSaved(false)
         }
 
     },[])
@@ -53,6 +61,22 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
         setEditInput(post.content)
 
     }
+
+    const handleSavePost = async()=>{
+        if(dbUser){
+            setshowMenu(false)
+            if(dbUser.savedPost.includes(post.id)){
+                setPostSaved(true)
+                return;
+            }
+            const userRef = doc(db,'users',dbUser.id)
+            await updateDoc(userRef,{
+                savedPost:arrayUnion(post.id)
+            })
+            fetchdbUser()
+            updatePost()
+        }
+    }
   return (
     <div className="relative ">
         <button className="" onClick={handleThreeDotClick}>
@@ -67,8 +91,9 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
                 </ul>
                 ):(
                 <ul className="absolute translate-y-0 z-10 -translate-x-[100%] border-[1px] border-gray-300 shadow-md rounded-sm bg-white">
-                    <li className="cursor-pointer p-1 text-[12px] text-nowrap hover:bg-gray-100 border-b-[1px] border-gray-400 ">Follow @{post.userId}</li>
-                    <li className="cursor-pointer p-1 text-[12px] text-nowrap hover:bg-gray-100 border-b-[1px] border-gray-400 ">Block @{post.userId}</li>
+                    <li className="cursor-pointer p-1 text-[12px] text-nowrap hover:bg-gray-100 border-b-[1px] border-gray-400 " onClick={handleSavePost}>{!postSaved? <span className="flex items-center">save Post <BiBookmark/></span>:<span className="flex items-center"> Post saved<FaBookmark /></span>}</li>
+                    
+                    {/* <li className="cursor-pointer p-1 text-[12px] text-nowrap hover:bg-gray-100 border-b-[1px] border-gray-400 ">Block @{post.userId}</li> */}
                 </ul>
                 )
             )

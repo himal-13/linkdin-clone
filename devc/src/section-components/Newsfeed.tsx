@@ -39,6 +39,20 @@ const Newsfeed = () => {
           setLoading(false)
         }
     }
+    const updatePost = async()=>{
+      try{
+        const querrySnapshot = await getDocs(collection(db,'posts'));
+        const fetchData =querrySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(), 
+          })as PostType)
+          setPosts(fetchData)
+    }catch(er){
+        // console.log(er)
+    
+    }
+
+    }
 
     useEffect(()=>{
         fetchPost()
@@ -58,7 +72,7 @@ const Newsfeed = () => {
         ):(
           <div className="p-3  ">
           {posts && posts.map((post)=>(
-            <Post post={post} key={post.id} postUpdated={async()=>{await fetchPost()}} />
+            <Post post={post} key={post.id} postUpdated={async()=>{await updatePost()}} />
           ))}
         </div>
         )

@@ -1,14 +1,14 @@
 import { MdAccountBox,} from "react-icons/md";
 import { PostType } from "../Newsfeed";
 import { BiComment, BiHeart, BiRepost, BiWorld,  } from "react-icons/bi";
-import { CiBookmark } from "react-icons/ci";
-import { arrayRemove, arrayUnion, doc, increment, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc,  increment, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
-import { FaHeart } from "react-icons/fa";
+import {  FaHeart,  } from "react-icons/fa";
 import PostThreeDot from "./PostThreeDot";
+import FollowingBtn from "./FollowingBtn";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user} = useAuth();
@@ -16,6 +16,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState(post.likes);
   const [likedBy, setLikedBy] = useState<string[]>(post.likedBy || []);
+  // const[postSaved,setpostSaved] = useState(false)
 
   // Sync local state with prop updates
   useEffect(() => {
@@ -59,14 +60,67 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
     }
   }, [user!.uid, user, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
 
+//   useEffect(()=>{
+//     if(!dbUser){
+//       return;
+//     }
+//     if(dbUser.savedPost.includes(post)){
+//       setpostSaved(true)
+//     }else{
+//       setpostSaved(false)
+//     }
+
+//   },[dbUser])
+
+//   const savePost = async()=>{
+//     if(!dbUser){
+//       return;
+//     }
+//     setLoading(true)
+//     const savedPost = dbUser.savedPost;
+//     const userRef = doc(db,'users',dbUser.id)
+    
+//   try{
+//     if(savedPost.includes(post)){
+//       await updateDoc(userRef,{
+//         savedPost:arrayRemove(post)
+  
+//       })
+
+//     }else{
+//       await updateDoc(userRef,{
+//         savedPost:arrayUnion(post)
+  
+//       })
+
+//     }
+//     await updateDoc(userRef,{
+//       savedPost:savedPost
+
+//     })
+//   }catch(e){
+//     console.log('error while saving',e)
+//   }finally{
+// setLoading(false)
+
+//   }
+// fetchdbUser()
+// postUpdated()
+// console.log(dbUser.savedPost)
+
+//   }
+
   return (
     <div className="my-2 p-2 bg-white rounded-lg">
       <header className="flex text-2xl justify-between">
         <section className="flex  gap-2">
           <MdAccountBox className="text-3xl" />
           <div className="flex flex-col justify-center ">
-            <span className="text-[15px] ">{post.userId} </span>
-            <div className="flex gap-1 items-center -my-4">
+            <div className="flex gap-2 items-center">
+              <span className="text-[15px] ">{post.userId} </span>
+              <FollowingBtn post={post}/>
+            </div>
+            <div className="flex gap-1 items-center -my-2">
               <span className="text-xs">{post.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
               {post.edited &&<><span className="-translate-y-2 font-bold ">.</span> <span className="text-xs">edited</span></>}
               <span className="-translate-y-2 font-bold ">.</span>
@@ -102,10 +156,14 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
             <BiComment />
             <span>0</span>
           </button>
+          <div className=""></div>
           
-          <button className="cursor-pointer flex flex-col items-center text-[16px] font-bold p-2">
-          <CiBookmark />
-          </button>
+          {/* <button onClick={savePost} disabled={loading}  className={`flex flex-col items-center text-[15px] p-2 ${
+              loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            } `}
+          >
+          {postSaved?<FaBookmark/>:<FaRegBookmark/>}
+          </button> */}
         </section>
       </main>
     </div>
