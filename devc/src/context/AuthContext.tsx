@@ -3,24 +3,27 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { auth, db, } from "../services/Firebase";
 import React from "react";
 import { collection, getDocs } from "firebase/firestore";
+import { PostType } from "../section-components/Newsfeed";
 // import { collection, getDoc, getDocs } from "firebase/firestore";
 
 
 interface AuthContextType{
     user:User | null,
-    dbUser:dbUser | undefined,
-    fetchdbUser:()=>void
+    dbUser:dbUserType | undefined,
+    fetchdbUser:()=>void,
+    alldbUser:dbUserType[] | undefined,
 
 
 }
-interface dbUser{
+export interface dbUserType{
     id:string
     userName:string,
     email:string,
     blocked:[],
     following:string[],
     followers:[],
-    savedPost:string[]
+    savedPost:string[],
+    posts:PostType[]
 }
 interface AuthProviderType{
     children:ReactNode
@@ -31,7 +34,8 @@ export const AuthContext = createContext<AuthContextType | null>(null)
  const AuthProvider:React.FC<AuthProviderType> =({children})=>{
     const[user,setUser] = useState< User |null>(null)
     const[loading,setLoading] = useState(true)
-    const[dbUser,setdbUser] = useState<dbUser | undefined>()
+    const[alldbUser,setAlldbUser] = useState<dbUserType[] | undefined>()
+    const[dbUser,setdbUser] = useState<dbUserType | undefined>()
 
     useEffect(()=>{
         setLoading(true)
@@ -52,7 +56,8 @@ export const AuthContext = createContext<AuthContextType | null>(null)
                 id:d.id,
                 ...d.data()
 
-            })as dbUser)
+            })as dbUserType)
+            setAlldbUser(fetchData)
             setdbUser(fetchData.find((d)=>d.email == user.email))
 
         }
@@ -64,7 +69,7 @@ export const AuthContext = createContext<AuthContextType | null>(null)
     },[user])
 
     return(
-        <AuthContext.Provider value={{user,dbUser,fetchdbUser}}>
+        <AuthContext.Provider value={{user,dbUser,fetchdbUser,alldbUser}}>
             {!loading && children}
         </AuthContext.Provider>
         

@@ -5,14 +5,16 @@ import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './auth/Login.tsx'
 import AuthProvider from './context/AuthContext.tsx'
+import Profile from './pages/MyProfile.tsx'
+import UserProfile from './pages/UserProfile.tsx'
 
 
 const router = createBrowserRouter([
 
   {
     path:'/',
-    element:<App/>
-
+    element:<App/>,
+    errorElement:<h1>Error APP</h1>
 
   },
   {
@@ -21,6 +23,15 @@ const router = createBrowserRouter([
     errorElement:<h1>Error</h1>
 
   },
+  {
+    path:'/profile',
+    element:<Profile/>,
+    errorElement:<h1>Error page</h1>
+  },
+  {
+    path:'/:userId',
+    element:<UserProfile/>
+  }
 
 ])
 

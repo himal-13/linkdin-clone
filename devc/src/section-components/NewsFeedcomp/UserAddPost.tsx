@@ -1,4 +1,4 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { addDoc,  collection, serverTimestamp, } from "firebase/firestore"
 import { useState } from "react"
 import { BiPhotoAlbum, BiText } from "react-icons/bi"
 import { GrArticle } from "react-icons/gr"
@@ -10,7 +10,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
   const[addPostMode,setAddPostMode] = useState(false)
   const[postInput,setPostInput] = useState('')
   const[loading,setLoading] = useState(false)
-  const{user} = useAuth()
+  const{user,dbUser,fetchdbUser} = useAuth()
   const navigate = useNavigate()
 
   const addPost = async()=>{
@@ -19,21 +19,24 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
       setLoading(false)
       return;
     }
-    if(!user){
+    if(!user ){
       navigate('/login')
       return;
 
     }
+    if(!dbUser) return;
     try{
       await addDoc(collection(db, "posts"), {
         content:postInput,
-        userId:user.displayName??'Anonymous user',
+        userId:user.displayName?? dbUser.userName,
         createdAt: serverTimestamp(),
         likes: 0,
         likedBy: [],
         repost:0,
         edited:false,
       });
+
+      fetchdbUser()
       setPostInput('')
       setAddPostMode(false)
       handleLoading();
@@ -45,7 +48,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
 
   }
   return (
-    <div className="bg-white p-5 w-full">
+    <div className="bg-white p-5 w-full border-b-[.5px] border-gray-400">
         <section className="flex gap-4 w-full ">
             <img src="./src/assets/profile-img/profile.jpg" height={50} width={50} className="rounded-full border-2 border-blue-600" alt="" />
               {addPostMode?(

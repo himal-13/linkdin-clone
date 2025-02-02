@@ -1,12 +1,13 @@
 import { Home, MessageCircle, Search } from "lucide-react"
 import { FaLinkedin, FaUserFriends } from "react-icons/fa"
 import { GrNotification } from "react-icons/gr"
+import { Link } from "react-router-dom"
 
 const Navbar = () => {
   return (
    <header className="flex md:justify-evenly justify-center gap-4  h-[10vh] header fixed w-full bg-white z-50 border-b-[1px] border-gray-500"> 
         <div className="flex items-center gap-2">
-            <FaLinkedin  className="text-4xl text-blue-700"/>
+            <Link to={'/'}><FaLinkedin  className="text-4xl text-blue-700"/></Link>
             <input type="search" name="search" className="border-[1px] px-4 py-[5px]  border-black search-input" placeholder='search'  />
             <Search className="search-icon"/>
         </div>

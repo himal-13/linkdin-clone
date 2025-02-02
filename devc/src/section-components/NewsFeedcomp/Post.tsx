@@ -4,14 +4,14 @@ import { BiComment, BiHeart, BiRepost, BiWorld,  } from "react-icons/bi";
 import { arrayRemove, arrayUnion, doc,  increment, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import {  FaHeart,  } from "react-icons/fa";
 import PostThreeDot from "./PostThreeDot";
 import FollowingBtn from "./FollowingBtn";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
-  const { user} = useAuth();
+  const { user,dbUser} = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState(post.likes);
@@ -117,7 +117,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <MdAccountBox className="text-3xl" />
           <div className="flex flex-col justify-center ">
             <div className="flex gap-2 items-center">
-              <span className="text-[15px] ">{post.userId} </span>
+              {post.userId === dbUser?.userName? <span className="text-[15px] ">{post.userId} </span>: <Link to={`${post.userId}`}><span className="text-[15px] ">{post.userId} </span></Link>}
               <FollowingBtn post={post}/>
             </div>
             <div className="flex gap-1 items-center -my-2">
