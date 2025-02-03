@@ -54,8 +54,8 @@ fetchData()
   return (
     <div className="">
         <Navbar/>
-        <main className="bg-gray-300 w-screen min-h-screen">
-          <main className="relative pt-[10vh] w-[80%] sm:w-[60%] md:w-[40%] left-1/2 -translate-x-1/2 bg-white min-h-screen">
+        <main className="bg-gray-300 w-screen min-h-screen flex justify-center">
+          <main className=" pt-[10vh] w-[80%] sm:w-[60%] md:w-[40%] bg-white min-h-screen">
             <div className="text-center relative top-3 flex flex-col justify-center items-center ">
                 <img src="./src/assets/profile-img/profile.jpg" height={70} width={70} className="rounded-full border-2 border-blue-600" alt="" />
                 <h4 className="font-bold cursor-pointer hover:underline">{user?.displayName}</h4>

@@ -18,7 +18,7 @@ const PostThreeDot = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => 
 
     useEffect(()=>{
         if(user){
-            if(user.displayName === post.userId){
+            if(user.displayName === post.userId && !post.repost || user.displayName === post.rePostedby ){
                 setitmyPost(true)
             }else{
                 setitmyPost(false)

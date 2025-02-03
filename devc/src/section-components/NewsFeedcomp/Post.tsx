@@ -1,6 +1,6 @@
 import { MdAccountBox,} from "react-icons/md";
 import { PostType } from "../Newsfeed";
-import { BiComment, BiHeart, BiRepost, BiWorld,  } from "react-icons/bi";
+import { BiComment, BiHeart, BiWorld,  } from "react-icons/bi";
 import { arrayRemove, arrayUnion, doc,  increment, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -9,6 +9,7 @@ import { useEffect, useState, useCallback } from "react";
 import {  FaHeart,  } from "react-icons/fa";
 import PostThreeDot from "./PostThreeDot";
 import FollowingBtn from "./FollowingBtn";
+import RePost from "./RePost";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user,dbUser} = useAuth();
@@ -60,58 +61,25 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
     }
   }, [user!.uid, user, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
 
-//   useEffect(()=>{
-//     if(!dbUser){
-//       return;
-//     }
-//     if(dbUser.savedPost.includes(post)){
-//       setpostSaved(true)
-//     }else{
-//       setpostSaved(false)
-//     }
 
-//   },[dbUser])
-
-//   const savePost = async()=>{
-//     if(!dbUser){
-//       return;
-//     }
-//     setLoading(true)
-//     const savedPost = dbUser.savedPost;
-//     const userRef = doc(db,'users',dbUser.id)
-    
-//   try{
-//     if(savedPost.includes(post)){
-//       await updateDoc(userRef,{
-//         savedPost:arrayRemove(post)
-  
-//       })
-
-//     }else{
-//       await updateDoc(userRef,{
-//         savedPost:arrayUnion(post)
-  
-//       })
-
-//     }
-//     await updateDoc(userRef,{
-//       savedPost:savedPost
-
-//     })
-//   }catch(e){
-//     console.log('error while saving',e)
-//   }finally{
-// setLoading(false)
-
-//   }
-// fetchdbUser()
-// postUpdated()
-// console.log(dbUser.savedPost)
-
-//   }
 
   return (
     <div className="my-2 p-2 bg-white rounded-lg">
+      {
+        post.isReposted && (
+          <header className="flex text-2xl justify-between">
+          <section className="flex items-center gap-2">
+            <MdAccountBox className="text-3xl" />
+            <span className="text-sm">{post.rePostedby}</span>
+            <FollowingBtn post={post}/>
+          </section>
+          <PostThreeDot updatePost={postUpdated} post={post}/>
+        </header>
+      
+      )}
+          <h4>{post.rePostContent}</h4>
+
+      <div className={`${post.isReposted && 'ml-4 p-2 rounded-md border-[.1px] border-gray-400'}`}>
       <header className="flex text-2xl justify-between">
         <section className="flex  gap-2">
           <MdAccountBox className="text-3xl" />
@@ -129,12 +97,12 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
               
           </div></div>
         </section>
-        <PostThreeDot updatePost={postUpdated} post={post}/>
+        {!post.isReposted && <PostThreeDot updatePost={postUpdated} post={post}/>}
       </header>
-      
+        <p className="my-2 text-2xl">{post.content}</p>      
+      </div>
+
       <main>
-        <p className="my-2 text-2xl">{post.content}</p>
-        
         <section className="flex justify-between border-y-[1px] border-gray-200 py-2">
           <button
             onClick={updateLikes}
@@ -147,10 +115,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
             <span>{likes}</span>
           </button>
           
-          <button className="cursor-pointer flex flex-col items-center text-[15px] p-2">
-            <BiRepost />
-            <span>{post.repost}</span>
-          </button>
+         <RePost updatePost={postUpdated} post={post}/>
           
           <button className="cursor-pointer flex flex-col items-center text-[15px] p-2">
             <BiComment />

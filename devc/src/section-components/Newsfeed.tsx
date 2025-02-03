@@ -15,7 +15,10 @@ export interface PostType{
     likes:number,
     repost:number,
     userId:string,
-    edited:boolean
+    edited:boolean,
+    isReposted:boolean,
+    rePostedby:string,
+    rePostContent:string
 
 }
 
