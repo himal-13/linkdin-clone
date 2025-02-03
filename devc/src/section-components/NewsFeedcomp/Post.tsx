@@ -10,6 +10,7 @@ import {  FaHeart,  } from "react-icons/fa";
 import PostThreeDot from "./PostThreeDot";
 import FollowingBtn from "./FollowingBtn";
 import RePost from "./RePost";
+import ManagePostedTimeUi from "./ManagePostedTimeUi";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user,dbUser} = useAuth();
@@ -89,7 +90,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
               <FollowingBtn post={post}/>
             </div>
             <div className="flex gap-1 items-center -my-2">
-              <span className="text-xs">{post.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              <ManagePostedTimeUi post={post}/>
               {post.edited &&<><span className="-translate-y-2 font-bold ">.</span> <span className="text-xs">edited</span></>}
               <span className="-translate-y-2 font-bold ">.</span>
               <BiWorld className="text-sm"/>
