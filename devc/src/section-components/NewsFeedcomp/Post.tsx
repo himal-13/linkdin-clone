@@ -11,6 +11,7 @@ import PostThreeDot from "./PostThreeDot";
 import FollowingBtn from "./FollowingBtn";
 import RePost from "./RePost";
 import ManagePostedTimeUi from "./ManagePostedTimeUi";
+import CommentBtn from "./CommentBtn";
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user,dbUser} = useAuth();
@@ -18,6 +19,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState(post.likes);
   const [likedBy, setLikedBy] = useState<string[]>(post.likedBy || []);
+  const[showAddComment,setShowAddComment] = useState(false)
   // const[postSaved,setpostSaved] = useState(false)
 
   // Sync local state with prop updates
@@ -118,19 +120,14 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           
          <RePost updatePost={postUpdated} post={post}/>
           
-          <button className="cursor-pointer flex flex-col items-center text-[15px] p-2">
+          <button onClick={()=>setShowAddComment(!showAddComment)} className="cursor-pointer flex flex-col items-center text-[15px] p-2">
             <BiComment />
-            <span>0</span>
+            <span>{post.comments.length}</span>
           </button>
           <div className=""></div>
           
-          {/* <button onClick={savePost} disabled={loading}  className={`flex flex-col items-center text-[15px] p-2 ${
-              loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            } `}
-          >
-          {postSaved?<FaBookmark/>:<FaRegBookmark/>}
-          </button> */}
         </section>
+        {showAddComment && <CommentBtn post={post} updatePost={()=>{setShowAddComment(false);postUpdated()}}/> }
       </main>
     </div>
   );

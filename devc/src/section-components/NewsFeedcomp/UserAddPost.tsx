@@ -36,7 +36,8 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
         edited:false,
         isReposted:false,
         rePostedby:'',
-        rePostContent:''
+        rePostContent:'',
+        comments:[]
       });
 
       fetchdbUser()

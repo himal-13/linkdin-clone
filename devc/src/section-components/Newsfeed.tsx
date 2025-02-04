@@ -7,6 +7,12 @@ import Post from "./NewsFeedcomp/Post"
 import PostSkeleton from "./NewsFeedcomp/PostSkeleton"
 
 
+interface CommentType{
+  content:string,
+  likes:number,
+  likedBy:[]
+
+}
 export interface PostType{
     id:string,
     content:string,
@@ -18,7 +24,8 @@ export interface PostType{
     edited:boolean,
     isReposted:boolean,
     rePostedby:string,
-    rePostContent:string
+    rePostContent:string,
+    comments:CommentType[] | []
 
 }
 
