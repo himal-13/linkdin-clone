@@ -10,6 +10,7 @@ import UserProfile from './pages/UserProfile.tsx'
 import PostPage from './pages/PostPage.tsx'
 import PostProvider from './context/PostActionContext.tsx'
 import Post404 from './pages/Post404.tsx'
+import Error404 from './pages/Error404.tsx'
 
 
 const router = createBrowserRouter([
@@ -17,23 +18,25 @@ const router = createBrowserRouter([
   {
     path:'/',
     element:<App/>,
-    errorElement:<h1>Error APP</h1>
+    errorElement:<Error404/>
 
   },
   {
     path:'/login',
     element:<Login/>,
-    errorElement:<h1>Error</h1>
+    errorElement:<Error404/>
 
   },
   {
     path:'/profile',
     element:<Profile/>,
-    errorElement:<h1>Error page</h1>
+    errorElement:<Error404/>
   },
   {
     path:'/:userId',
-    element:<UserProfile/>
+    element:<UserProfile/>,
+    errorElement:<Error404/>
+
   },
   {
     path:'/post/:id',
