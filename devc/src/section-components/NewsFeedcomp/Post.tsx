@@ -1,10 +1,10 @@
 import { MdAccountBox,} from "react-icons/md";
 import { PostType } from "../Newsfeed";
 import { BiComment, BiHeart, BiWorld,  } from "react-icons/bi";
-import { arrayRemove, arrayUnion, doc,  increment, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc,  getDocs,  increment, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../services/Firebase";
 import { useAuth } from "../../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import {  FaHeart,  } from "react-icons/fa";
 import PostThreeDot from "./PostThreeDot";
@@ -13,6 +13,16 @@ import RePost from "./RePost";
 import ManagePostedTimeUi from "./ManagePostedTimeUi";
 import CommentBtn from "./CommentBtn";
 
+
+export interface CommentType{
+  content:string,
+  id:string
+  likedBy:[],
+  commentBy:string,
+  createdAt:Timestamp
+
+}
+
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
   const { user,dbUser} = useAuth();
   const navigate = useNavigate();
@@ -20,12 +30,23 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
   const [likes, setLikes] = useState(post.likes);
   const [likedBy, setLikedBy] = useState<string[]>(post.likedBy || []);
   const[showAddComment,setShowAddComment] = useState(false)
+  const[comments,setComments] = useState<CommentType[] | []>([])
   // const[postSaved,setpostSaved] = useState(false)
 
-  // Sync local state with prop updates
+
+  const getComments = async()=>{
+    const commentsRef = collection(db,'posts',post.id,'comments')
+    const fetchData = (await getDocs(commentsRef)).docs.map((comment)=>({
+      id:comment.id,
+      ...comment.data()
+    })as CommentType)
+    setComments(fetchData)
+    
+  }
   useEffect(() => {
     setLikes(post.likes);
     setLikedBy(post.likedBy || []);
+    getComments()
   }, [post.likes, post.likedBy]);
 
   const updateLikes = useCallback(async () => {
@@ -73,14 +94,17 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <header className="flex text-2xl justify-between">
           <section className="flex items-center gap-2">
             <MdAccountBox className="text-3xl" />
-            <span className="text-sm">{post.rePostedby}</span>
-            <FollowingBtn post={post}/>
+            {post.rePostedby == dbUser?.userName?(
+            <Link to={`/${post.rePostedby}`}> <span className="text-sm">{post.rePostedby}</span></Link>
+
+            ):<span className="text-sm">{post.rePostedby}</span>}
+            <FollowingBtn postedBy={post.rePostedby} />
           </section>
           <PostThreeDot updatePost={postUpdated} post={post}/>
         </header>
       
       )}
-          <h4>{post.rePostContent}</h4>
+          <Link to={`/post/${post.id}`}><h4>{post.rePostContent}</h4></Link>
 
       <div className={`${post.isReposted && 'ml-4 p-2 rounded-md border-[.1px] border-gray-400'}`}>
       <header className="flex text-2xl justify-between">
@@ -89,7 +113,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <div className="flex flex-col justify-center ">
             <div className="flex gap-2 items-center">
               {post.userId === dbUser?.userName? <span className="text-[15px] ">{post.userId} </span>: <Link to={`${post.userId}`}><span className="text-[15px] ">{post.userId} </span></Link>}
-              <FollowingBtn post={post}/>
+              <FollowingBtn postedBy={post.userId}/>
             </div>
             <div className="flex gap-1 items-center -my-2">
               <ManagePostedTimeUi post={post}/>
@@ -102,7 +126,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
         </section>
         {!post.isReposted && <PostThreeDot updatePost={postUpdated} post={post}/>}
       </header>
-        <p className="my-2 text-2xl">{post.content}</p>      
+        <Link to={`/post/${post.id}`}><p className="my-2 text-2xl">{post.content}</p> </Link>     
       </div>
 
       <main>
@@ -122,7 +146,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           
           <button onClick={()=>setShowAddComment(!showAddComment)} className="cursor-pointer flex flex-col items-center text-[15px] p-2">
             <BiComment />
-            <span>{post.comments.length}</span>
+            {comments.length}
           </button>
           <div className=""></div>
           

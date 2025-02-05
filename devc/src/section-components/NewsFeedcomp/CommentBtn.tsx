@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useAuth } from "../../context/AuthContext"
 import { PostType } from "../Newsfeed"
 import { MdAccountBox } from "react-icons/md"
-import { arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { db } from "../../services/Firebase"
 
 const CommentBtn = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
@@ -13,9 +13,13 @@ const CommentBtn = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
         if(user && commentInput){
             setCommentInput('')
             try{
-                const postRef = doc(db,'posts',post.id)
-            await updateDoc(postRef,{
-                comments:arrayUnion({content:commentInput,likes:0,likedBy:[]})
+                const commentRef  = collection(db,'posts',post.id,'comments')
+                await addDoc(commentRef,{
+                    content:commentInput,
+                    likedBy:[],
+                    commentBy:user.displayName,
+                    createdAt:serverTimestamp()           
+
             })
             updatePost()
 

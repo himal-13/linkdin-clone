@@ -26,7 +26,8 @@ const RePost = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
                 edited:false,
                 isReposted:true,
                 rePostedby:dbUser.userName,
-                rePostContent:repostTitle
+                rePostContent:repostTitle,
+                comments:[],
               });
               const postRef = doc(db,'posts',post.id)
               await updateDoc(postRef,{

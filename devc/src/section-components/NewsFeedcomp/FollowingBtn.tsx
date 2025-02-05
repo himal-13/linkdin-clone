@@ -2,22 +2,21 @@ import { BiPlus } from "react-icons/bi"
 import { dbUserType, useAuth } from "../../context/AuthContext"
 import { arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../services/Firebase"
-import { PostType } from "../Newsfeed"
 import { useEffect, useState } from "react"
 
-const FollowingBtn = ({post}:{post:PostType}) => {
+const FollowingBtn = ({postedBy}:{postedBy:string}) => {
     const{dbUser,fetchdbUser,user,alldbUser} = useAuth()
     const[isFollowing,setIsFollowing] = useState<boolean | undefined>()
     const[isMe,setisMe] = useState<boolean | undefined>()
 
     useEffect(()=>{
         if(dbUser && user){
-            if( dbUser.userName === post.userId){
+            if( dbUser.userName === postedBy){
                 setisMe(true)
             }else{
                 setisMe(false)
             }
-            if(dbUser.following.includes(post.userId)){
+            if(dbUser.following.includes(postedBy)){
                 setIsFollowing(true)
             }else{
                 setIsFollowing(false)
@@ -31,7 +30,7 @@ const FollowingBtn = ({post}:{post:PostType}) => {
             console.log('dbUser is no')
             return;
         }
-        const followingdbUser:dbUserType | undefined = alldbUser?.find((u)=>u.userName ===post.userId)
+        const followingdbUser:dbUserType | undefined = alldbUser?.find((u)=>u.userName ===postedBy)
 
         const followingUserRef = doc(db,'users',followingdbUser!.id)
         await updateDoc(followingUserRef,{
@@ -40,7 +39,7 @@ const FollowingBtn = ({post}:{post:PostType}) => {
         })
             const followerUserRef = doc(db,'users',dbUser.id)
             await updateDoc(followerUserRef,{
-                following:arrayUnion(post.userId)
+                following:arrayUnion(postedBy)
             })
             fetchdbUser();
         

@@ -26,7 +26,9 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
     }
     if(!dbUser) return;
     try{
-      await addDoc(collection(db, "posts"), {
+      const postRef = collection(db,'posts')
+      // const commentRef = collection(postRef,'comments')
+      await addDoc(postRef, {
         content:postInput,
         userId:user.displayName?? dbUser.userName,
         createdAt: serverTimestamp(),
@@ -37,8 +39,14 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
         isReposted:false,
         rePostedby:'',
         rePostContent:'',
-        comments:[]
       });
+      // await addDoc(commentRef,{
+      //   content:'',
+      //   likedBy:[],
+      //   commentBy:'',
+      //   createdAt:serverTimestamp()
+
+      // })
 
       fetchdbUser()
       setPostInput('')

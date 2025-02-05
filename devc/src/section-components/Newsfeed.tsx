@@ -7,12 +7,6 @@ import Post from "./NewsFeedcomp/Post"
 import PostSkeleton from "./NewsFeedcomp/PostSkeleton"
 
 
-interface CommentType{
-  content:string,
-  likes:number,
-  likedBy:[]
-
-}
 export interface PostType{
     id:string,
     content:string,
@@ -25,7 +19,7 @@ export interface PostType{
     isReposted:boolean,
     rePostedby:string,
     rePostContent:string,
-    comments:CommentType[] | []
+    // comments:CommentType[] | []
 
 }
 
@@ -37,6 +31,8 @@ const Newsfeed = () => {
       setLoading(true)
         try{
             const querrySnapshot = await getDocs(collection(db,'posts'));
+            // const querryCommentSnapshot = await getDocs(collection(db,'posts'));
+
             const fetchData =querrySnapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(), 

@@ -49,9 +49,8 @@ const UserProfile = () => {
   useEffect(()=>{
 
     const fetchData =async()=>{
-        await fetchUserData()
-    await  fetchPosts()
-    console.log(myPosts)
+      await fetchUserData()
+      await  fetchPosts()
 
 
     }
