@@ -25,7 +25,7 @@ const Profile = () => {
         id: doc.id,
         ...doc.data(), 
       })as PostType)
-      setMyPosts(fetchData.filter(pos=>pos.userId ===dbUser.userName))
+      setMyPosts(fetchData.filter(pos=>pos.userId ===dbUser.userName || pos.rePostedby === dbUser.userName))
     }catch(e){
       console.log('error etching my posts',e)
       
