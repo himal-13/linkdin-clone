@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../services/Firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
+import { MdAccountCircle } from "react-icons/md";
 
 const Leftbar = () => {
   const{user} = useAuth()
@@ -20,7 +21,8 @@ const Leftbar = () => {
     <section className="w-[300px] bg-white h-fit relative rounded-2xl">
         <div className="h-[8vh] bg-stone-500"></div>
         <div className="text-center absolute top-[5vh] left-[50%] -translate-x-1/2 flex flex-col justify-center items-center">
-            <img src="./src/assets/profile-img/profile.jpg" height={70} width={70} className="rounded-full border-2 border-blue-600" alt="" />
+            <MdAccountCircle className="text-7xl bg-white rounded-full" />
+
             <Link to={'/profile'}><h4 className="font-bold cursor-pointer hover:underline">{user?.email}</h4></Link>
             <h5 className="text-[14px]">Fullstack Developer</h5>
         </div>
