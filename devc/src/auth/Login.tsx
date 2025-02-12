@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth, db } from "../services/Firebase"
-import { addDoc, collection, getDocs } from "firebase/firestore"
+import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore"
 
 interface FormData{
     email:string,
@@ -121,7 +121,8 @@ const Login = () => {
                 location:'',
                 study:'',
                 work:''
-              }
+              },
+              joinDate:serverTimestamp()
 
             })
             await updateProfile(userData,{displayName:userName})
