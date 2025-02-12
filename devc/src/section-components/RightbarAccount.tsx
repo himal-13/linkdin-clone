@@ -24,14 +24,23 @@ const RightBarAccount = ({user,handleRemoveUser}:{user:dbUserType,handleRemoveUs
 
 const addFollowing = async()=>{
   if(dbUser){
-    const userRef = doc(db,'users',dbUser.id)
-    await updateDoc(userRef,{
-      following:arrayUnion(user.userName)
+  try{
+    const followingUserRef = doc(db,'users',user.id)
+    await updateDoc(followingUserRef,{
+        followers:arrayUnion(dbUser.userName)
+
     })
+        const followerUserRef = doc(db,'users',dbUser.id)
+        await updateDoc(followerUserRef,{
+            following:arrayUnion(user.userName)
+        })
+        fetchdbUser();
+
+  }catch(e){
+    console.log('error following user',e)
+  }
     fetchdbUser()
-    setTimeout(()=>{
-      handleRemoveUser()
-    },2000)
+
   }
 }
   return (
@@ -44,7 +53,7 @@ const addFollowing = async()=>{
             <div className="flex p-2 items-center gap-2 ">
                 {isFollowed?<span className="bg-gray-200 text-sm px-2 py-1 rounded-lg">Following</span>:(
                   <>
-                  <button className="text-sm bg-blue-500 text-white px-2 py-1 rounded-md" onClick={addFollowing}>Follow +</button>
+                  <button className="text-sm bg-blue-500 text-white px-2 py-1 rounded-md" onClick={()=>addFollowing()}>Follow +</button>
                   <GrClose className="cursor-pointer" onClick={handleRemoveUser}/>
                   </>
                 )}

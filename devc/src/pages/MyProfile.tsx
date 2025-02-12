@@ -1,4 +1,4 @@
-import { MdWork } from "react-icons/md";
+import { MdAccountCircle, MdWork } from "react-icons/md";
 import { useAuth } from "../context/AuthContext"
 import Navbar from "../section-components/Navbar"
 import UserAddPost from "../section-components/NewsFeedcomp/UserAddPost";
@@ -57,7 +57,7 @@ fetchData()
         <main className="bg-gray-300 w-screen min-h-screen flex justify-center">
           <main className=" pt-[10vh] w-[80%] sm:w-[60%] md:w-[40%] bg-white min-h-screen">
             <div className="text-center relative top-3 flex flex-col justify-center items-center ">
-                <img src="./src/assets/profile-img/profile.jpg" height={70} width={70} className="rounded-full border-2 border-blue-600" alt="" />
+              <MdAccountCircle className="text-5xl" /> 
                 <h4 className="font-bold cursor-pointer hover:underline">{user?.displayName}</h4>
                 <h5 className="text-[14px]">Fullstack Developer</h5>
                 <div className="text-sm flex gap-2">
