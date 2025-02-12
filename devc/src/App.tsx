@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Newsfeed from "./section-components/Newsfeed";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import Rightbar from "./section-components/Rightbar";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -32,9 +33,12 @@ const App = () => {
   return (
     <div className="">
       <Navbar/>
-      <main className="bg-gray-300 py-4 min-h-screen flex justify-center gap-[5vw] relative top-[10vh]">
+      <main className="bg-gray-300 py-4 min-h-screen flex justify-center gap-[2vw] relative top-[10vh]">
         <Leftbar/>    
         <Newsfeed/>
+        <div className="hidden lg:block">
+        <Rightbar/>
+        </div>
       </main>
     </div>
   );
