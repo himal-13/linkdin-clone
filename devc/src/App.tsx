@@ -6,21 +6,40 @@ import Newsfeed from "./section-components/Newsfeed";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Rightbar from "./section-components/Rightbar";
+import NewAccountDetailForm from "./section-components/NewAccountDetailForm";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user,dbUser } = useAuth();
+  const [hide,setHide] = useState(false)
   const navigate = useNavigate();
 
+  const isData = async()=>{
+
+    if(dbUser && dbUser.fullName == ''){
+        setHide(true)
+        
+    }else{
+        setHide(false)
+    }
+  }
+
+  useEffect(()=>{
+    const isUserDetails = async()=>{
+        await isData();
+    }
+    isUserDetails()
+    
+
+  },[dbUser])
+
   useEffect(() => {
-    if (user === null) {
-      // Redirect to login if no user exists
-      navigate('/login');
-    } else if (user) {
-      // User is authenticated, allow access
+    if (!user && !loading) {
+      navigate("/login");
+    } else {
       setLoading(false);
     }
-  }, [user, navigate]); // React to user state changes
+  }, []); 
 
   if (loading) {
     return (
@@ -37,7 +56,10 @@ const App = () => {
         <Leftbar/>    
         <Newsfeed/>
         <div className="hidden lg:block">
-        <Rightbar/>
+          <Rightbar/>
+        </div>
+        <div className={`${!hide && 'hidden'}`}>
+          <NewAccountDetailForm setHide={()=>setHide(false)}/>
         </div>
       </main>
     </div>

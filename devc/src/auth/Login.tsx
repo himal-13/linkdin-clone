@@ -114,7 +114,14 @@ const Login = () => {
               blocked:[],
               following:[],
               followers:[],
-              savedPost:[]
+              savedPost:[],
+              fullName:'',
+              userDetails:{
+                bio:'',
+                location:'',
+                study:'',
+                work:''
+              }
 
             })
             await updateProfile(userData,{displayName:userName})

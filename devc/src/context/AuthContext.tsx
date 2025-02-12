@@ -2,7 +2,7 @@ import {  onAuthStateChanged, User } from "firebase/auth";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { auth, db, } from "../services/Firebase";
 import React from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { PostType } from "../section-components/Newsfeed";
 // import { collection, getDoc, getDocs } from "firebase/firestore";
 
@@ -15,6 +15,12 @@ interface AuthContextType{
 
 
 }
+interface useDetailsType{
+    bio:string,
+    location:string,
+    study:string,
+    work:string
+}
 export interface dbUserType{
     id:string
     userName:string,
@@ -23,7 +29,10 @@ export interface dbUserType{
     following:string[],
     followers:[],
     savedPost:string[],
-    posts:PostType[]
+    posts:PostType[],
+    fullName:string,
+    userDetails:useDetailsType ,
+    joinDate:Timestamp
 }
 interface AuthProviderType{
     children:ReactNode
