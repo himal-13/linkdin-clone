@@ -24,7 +24,7 @@ export interface CommentType{
 }
 
 const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }) => {
-  const { user,dbUser} = useAuth();
+  const { dbUser} = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState(post.likes);
@@ -51,7 +51,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
 
   const updateLikes = useCallback(async () => {
     if (loading) return;
-    if (!user) {
+    if (!dbUser) {
       navigate('/login');
       return;
     }
@@ -60,19 +60,19 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
       setLoading(true);
 
       const postRef = doc(db, 'posts', post.id);
-      const wasLiked = likedBy.includes(user.uid);
+      const wasLiked = likedBy.includes(dbUser.id);
 
       // Optimistic UI update
       setLikes(prev => wasLiked ? prev - 1 : prev + 1);
       setLikedBy(prev => wasLiked 
-        ? prev.filter(id => id !== user.uid) 
-        : [...prev, user.uid]
+        ? prev.filter(id => id !== dbUser.id) 
+        : [...prev, dbUser.id]
       );
 
       // Database update
       await updateDoc(postRef, {
         likes: increment(wasLiked ? -1 : 1),
-        likedBy: wasLiked ? arrayRemove(user.uid) : arrayUnion(user.uid)
+        likedBy: wasLiked ? arrayRemove(dbUser.id) : arrayUnion(dbUser.id)
       });
       postUpdated();
     } catch (error) {
@@ -83,7 +83,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
     } finally {
       setLoading(false);
     }
-  }, [ user, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
+  }, [ dbUser,dbUser?.id, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
 
 
 
@@ -131,16 +131,18 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
 
       <main>
         <section className="flex justify-between border-y-[1px] border-gray-200 py-2">
-          <button
+        {dbUser &&(
+            <button
             onClick={updateLikes}
             disabled={loading}
             className={`flex flex-col items-center text-[15px] p-2 ${
               loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            } ${likedBy.includes(user!.uid!) ? 'text-red-500' : ''}`}
+            } ${likedBy.includes(dbUser.id) ? 'text-red-500' : ''}`}
           >
-            {likedBy.includes(user!.uid!)?<FaHeart/>:<BiHeart/>}
+            {likedBy.includes(dbUser.id)?<FaHeart/>:<BiHeart/>}
             <span>{likes}</span>
           </button>
+        )}
           
          <RePost updatePost={postUpdated} post={post}/>
           
