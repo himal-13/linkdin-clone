@@ -10,7 +10,7 @@ import { db } from "../services/Firebase";
 import { useNavigate } from "react-router-dom";
 import { GrLocation } from "react-icons/gr";
 import EditMyProfilePop from "./components/EditMyProfilePop";
-import FollowersPopup from "./components/FollowersPopup";
+import FollowersPopup from "./components/MyFollowersPopup";
 
 interface ShowFollowersProps{
   show:boolean,

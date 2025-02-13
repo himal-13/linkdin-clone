@@ -31,7 +31,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
       // const commentRef = collection(postRef,'comments')
       await addDoc(postRef, {
         content:postInput,
-        userId:user.displayName?? dbUser.userName,
+        userId:dbUser.userName,
         createdAt: serverTimestamp(),
         likes: 0,
         likedBy: [],

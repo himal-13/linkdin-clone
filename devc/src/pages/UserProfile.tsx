@@ -1,22 +1,70 @@
 import { MdAccountCircle, MdWork } from "react-icons/md";
 import { dbUserType, useAuth } from "../context/AuthContext"
 import Navbar from "../section-components/Navbar"
-import UserAddPost from "../section-components/NewsFeedcomp/UserAddPost";
-import { FaUniversity } from "react-icons/fa";
 import Post from "../section-components/NewsFeedcomp/Post";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PostType } from "../section-components/Newsfeed";
-import { collection, getDocs } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../services/Firebase";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import { GrLocation } from "react-icons/gr";
+import OtherFollowersPopup from "./components/OtherFollowersPop";
+import { BsEmojiExpressionless } from "react-icons/bs";
+
+interface ShowFollowersProps{
+  show:boolean,
+  type:'followers' | 'following'
+}
 
 const UserProfile = () => {
   const params = useParams();
   const[currentdbUser,setCurrentdbUser] = useState<dbUserType | undefined>()
   const{user,dbUser,fetchdbUser,alldbUser} = useAuth()
-  const[myPosts,setMyPosts] = useState<PostType[] | undefined>();
-  // const navigate = useNavigate();
+  const[userPosts,setUserPosts] = useState<PostType[] | undefined>();
+  const[showFollowers,setShowFollowers] = useState<ShowFollowersProps>({show:false,type:'followers'})
   const[loading,setLoading] = useState(true)
+  const[followers,setFollowers] = useState<dbUserType[] | []>([])
+  const[following,setFollowing] = useState<dbUserType[] | []>([])
+  const[isFollowing,setIsFollowing] = useState<boolean | undefined>()
+  const[showUnfollowDialog,setShowUnfollowDialog] = useState<boolean>(false)
+
+  const fetchUserData=async()=>{
+    if(alldbUser){
+      setCurrentdbUser(alldbUser.find((data)=>data.userName === params.userId))
+    }
+  
+  }
+    const fetchFollowers = useCallback(async() => {
+      if(currentdbUser && alldbUser){
+        const followers = alldbUser.filter((u)=>currentdbUser.followers.includes(u.userName))
+        const following = alldbUser.filter((u)=>currentdbUser.following.includes(u.userName))
+        setFollowers(followers)
+        setFollowing(following)
+      }
+    }, [alldbUser]);
+
+  useEffect(()=>{
+
+    const fetchData =async()=>{
+      await fetchUserData()
+      await  fetchPosts()
+      if(currentdbUser && alldbUser){
+        const followers = alldbUser.filter((u)=>currentdbUser.followers.includes(u.userName))
+        const following = alldbUser.filter((u)=>currentdbUser.following.includes(u.userName))
+        setFollowers(followers)
+        setFollowing(following)
+        if(dbUser && dbUser.following.includes(currentdbUser.userName)){
+          setIsFollowing(true)
+        }else{
+          setIsFollowing(false)
+        }
+      }
+
+    }
+fetchData()
+
+  },[user,dbUser,currentdbUser])
+ 
 
   const fetchPosts=async()=>{
     if(dbUser){
@@ -27,7 +75,7 @@ const UserProfile = () => {
         id: doc.id,
         ...doc.data(), 
       })as PostType)
-      setMyPosts(fetchData.filter(pos=>pos.userId === params.userId))
+      setUserPosts(fetchData.filter(pos=>pos.userId === params.userId))
     }catch(e){
       console.log('error etching my posts',e)
       
@@ -36,51 +84,91 @@ const UserProfile = () => {
     }
     }
   }
-  const fetchUserData=async()=>{
-    if(alldbUser){
-      setCurrentdbUser(alldbUser.find((data)=>data.userName === params.userId))
 
+  const handleFollow = async()=>{
+    if(!alldbUser || !currentdbUser || !dbUser){
+      return;
+    }
+    if(isFollowing){
+      setShowUnfollowDialog(true)
+      setShowUnfollowDialog(true)
+    }else{
+      const followingdbUser:dbUserType | undefined = alldbUser?.find((u)=>u.userName ===currentdbUser.userName)
+      const followingUserRef = doc(db,'users',followingdbUser!.id)
+      await updateDoc(followingUserRef,{
+          followers:arrayUnion(dbUser.userName)
 
+      })
+          const followerUserRef = doc(db,'users',dbUser.id)
+          await updateDoc(followerUserRef,{
+              following:arrayUnion(currentdbUser.userName)
+          })
+          fetchdbUser()
+          setIsFollowing(true)
     }
 
-  
   }
-
-  useEffect(()=>{
-
-    const fetchData =async()=>{
-      await fetchUserData()
-      await  fetchPosts()
-
-
+  const handleUnfollow = async()=>{
+    if(!alldbUser || !currentdbUser || !dbUser){
+      return;
     }
-fetchData()
+    const followingdbUser:dbUserType | undefined = alldbUser?.find((u)=>u.userName ===currentdbUser.userName)
+    const followingUserRef = doc(db,'users',followingdbUser!.id)
+    await updateDoc(followingUserRef,{
+        followers:arrayRemove(dbUser.userName)
 
-  },[user,dbUser])
- 
+    })
+        const followerUserRef = doc(db,'users',dbUser.id)
+        await updateDoc(followerUserRef,{
+            following:arrayRemove(currentdbUser.userName)
+        })
+        fetchdbUser()
+        setIsFollowing(false)
+        setShowUnfollowDialog(false)
+
+  }
+  
   return (
     <div className="">
         <Navbar/>
         <main className="bg-gray-300 w-screen min-h-screen flex justify-center">
-          <main className=" pt-[10vh] w-[80%] sm:w-[60%] md:w-[40%]  bg-white min-h-screen">
-            <div className="text-center relative top-3 flex flex-col justify-center items-center ">
-               <MdAccountCircle className="text-5xl" /> 
-                <h4 className="font-bold cursor-pointer hover:underline">{params.userId}</h4>
-                <h5 className="text-[14px]">Fullstack Developer</h5>
-                <div className="text-sm flex gap-2">
-                  <span className="px-2 py-1 rounded-full bg-slate-300">followers {currentdbUser?.followers.length}</span>
-                  <span className="px-2 py-1 rounded-full bg-slate-300">following {currentdbUser?.following.length}</span>
+        <main className=" pt-[10vh] px-4 sm:px-1 w-[100%] sm:w-[60%] md:w-[40%] bg-white min-h-screen ">
+            <div className=" relative top-3 p-4 items-center ">
+            <div className="flex justify-between">
+                  <MdAccountCircle className="text-7xl" />  
+                  <button className="p-2 border-[1px] border-black font-bold self-end text-sm rounded-lg" onClick={()=>handleFollow()}>{isFollowing? 'following':'follow'}</button>
+                </div>    
+              <div className="text-start">
+                  <h4 className="font-bold  ">{currentdbUser?.fullName}</h4>
+                  <h5 className="text-[14px] text-gray-500">@{currentdbUser?.userName}</h5>
+                  <h4>{currentdbUser?.userDetails.bio}</h4>
+                  <h4 className="flex items-center gap-1 text-gray-700 text-sm"><GrLocation />{currentdbUser?.userDetails.location}</h4>
+                  <h4 className="flex gap-1 items-center  text-gray-700 text-sm"><MdWork/> works at {currentdbUser?.userDetails.work}/studied at {dbUser?.userDetails.study}</h4>
+              </div>
+              <div className="text-sm flex gap-2">
+                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer" onClick={()=>setShowFollowers({show:true,type:'followers'})}><span className="font-bold">{currentdbUser?.followers.length}</span>followers </span>
+                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer" onClick={()=>setShowFollowers({show:true,type:'following'})}> <span className="font-bold">{currentdbUser?.following.length}</span>following</span>
                 </div>
         
             </div>
-            <div className="m-4 p-2 border-y-[1px] border-gray-400 ">
-                  <h4 className="flex gap-2 items-center"><MdWork/> Works at Microsoft</h4>
-                  <h4 className="flex gap-2 items-center"><FaUniversity/> Studied at Harward University</h4>
+            <hr />
+            <div className={`${showFollowers.show?'block':'hidden'}`}>
+              <OtherFollowersPopup updateUi={fetchFollowers} type={showFollowers.type} users={showFollowers.type ==='followers'?followers:following} handleClose={()=>setShowFollowers({show:false,type:'followers'})}/>
+            </div>
+            <div className={`fixed h-screen w-screen top-0 left-0 justify-center items-center z-10 bg-slate-900/70 ${showUnfollowDialog?'flex':'hidden'}`}>
+              <div className="p-4 bg-white rounded-lg max-w-[80vw] ">
+                <h1 className="text-xl my-3">Do you want to unfollow {currentdbUser?.fullName}?</h1>
+                <div className="flex gap-2 justify-end items-center">
+                  <button className="p-2 border-[1px] border-black font-bold self-end text-sm rounded-lg" onClick={()=>setShowUnfollowDialog(false)}>cancel</button>
+                  <button className="p-2 bg-blue-500 text-white font-bold self-end text-sm rounded-lg" onClick={async()=>handleUnfollow()}>unfollow</button>
+
                 </div>
-            <UserAddPost handleLoading={async()=>{}}/>
+              </div>
+            </div>
+
               <div className="">
                 {
-                 !loading || myPosts ? myPosts && myPosts.map((pos)=>(
+                 !loading || userPosts ? userPosts && userPosts.map((pos)=>(
                   <Post post={pos} key={pos.id} postUpdated={()=>{ fetchdbUser()}} />
                 )):(
                   <div className="">
@@ -88,7 +176,13 @@ fetchData()
                   </div>
                 )
               }
-              {myPosts?.length ==0 && <span>You haven't post</span>}
+              {userPosts?.length ==0 && (
+                <div className="flex flex-col items-center gap-2 mt-4 " >
+                  <BsEmojiExpressionless className="text-7xl" />
+                  <h1 className="text-xl">no post yet...</h1>
+
+                </div>
+              )}
               </div>
           </main>
         </main>
