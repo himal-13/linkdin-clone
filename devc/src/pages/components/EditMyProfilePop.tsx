@@ -50,7 +50,7 @@ const EditMyProfilePop = ({closeMenu}:{closeMenu:()=>void}) => {
             }
 
         })
-        await fetchdbUser()
+        fetchdbUser()
     }
   };
 

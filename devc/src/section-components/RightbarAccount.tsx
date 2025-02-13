@@ -58,7 +58,7 @@ const addFollowing = async()=>{
                   </>
                 )}
             </div>
-            </div>
+      </div>
 
                 
   )

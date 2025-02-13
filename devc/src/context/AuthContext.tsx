@@ -27,7 +27,7 @@ export interface dbUserType{
     email:string,
     blocked:[],
     following:string[],
-    followers:[],
+    followers:string[],
     savedPost:string[],
     posts:PostType[],
     fullName:string,

@@ -1,22 +1,32 @@
 import { MdAccountCircle, MdWork } from "react-icons/md";
-import { useAuth } from "../context/AuthContext"
+import { dbUserType, useAuth } from "../context/AuthContext"
 import Navbar from "../section-components/Navbar"
 import UserAddPost from "../section-components/NewsFeedcomp/UserAddPost";
 import Post from "../section-components/NewsFeedcomp/Post";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PostType } from "../section-components/Newsfeed";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../services/Firebase";
 import { useNavigate } from "react-router-dom";
 import { GrLocation } from "react-icons/gr";
 import EditMyProfilePop from "./components/EditMyProfilePop";
+import FollowersPopup from "./components/FollowersPopup";
+
+interface ShowFollowersProps{
+  show:boolean,
+  type:'followers' | 'following'
+  
+}
 
 const Profile = () => {
-  const{user,dbUser,fetchdbUser} = useAuth()
+  const{user,dbUser,fetchdbUser,alldbUser} = useAuth()
   const[myPosts,setMyPosts] = useState<PostType[] | undefined>();
   const navigate = useNavigate();
   const[loading,setLoading] = useState(true)
   const[showEditMenu,setShowEditMenu] = useState(false)
+  const[showFollowers,setShowFollowers] = useState<ShowFollowersProps>({show:false,type:'followers'})
+  const[followers,setFollowers] = useState<dbUserType[] | []>([])
+  const[following,setFollowing] = useState<dbUserType[] | []>([])
 
   const fetchPosts=async()=>{
     if(dbUser){
@@ -28,14 +38,23 @@ const Profile = () => {
         ...doc.data(), 
       })as PostType)
       setMyPosts(fetchData.filter(pos=>pos.userId ===dbUser.userName || pos.rePostedby === dbUser.userName))
+
     }catch(e){
-      console.log('error etching my posts',e)
+      console.log('error fetching my posts',e)
       
     }finally{
       setLoading(false)
     }
     }
   }
+  const fetchFollowers = useCallback(() => {
+    if(dbUser && alldbUser){
+      const followers = alldbUser.filter((u)=>dbUser.followers.includes(u.userName))
+      const following = alldbUser.filter((u)=>dbUser.following.includes(u.userName))
+      setFollowers(followers)
+      setFollowing(following)
+    }
+  }, [alldbUser, dbUser]);
 
   useEffect(()=>{
 
@@ -45,19 +64,20 @@ const Profile = () => {
         return;
       }
     await  fetchPosts()
-    console.log(myPosts)
+    console.log('myposts',myPosts)
 
 
     }
 fetchData()
+fetchFollowers()
 
-  },[user,dbUser])
+  },[user,dbUser,alldbUser])
  
   return (
     <div className="">
         <Navbar/>
         <main className="bg-gray-300 w-screen min-h-screen flex justify-center">
-          <main className=" pt-[10vh] w-[80%] sm:w-[60%] md:w-[40%] bg-white min-h-screen">
+          <main className=" pt-[10vh] px-4 sm:px-1 w-[100%] sm:w-[60%] md:w-[40%] bg-white min-h-screen ">
             <div className="text-center relative top-3  p-4 border-b-[1px] border-gray-200">
                 <div className="flex justify-between ">
                   <MdAccountCircle className="text-7xl" />  
@@ -72,10 +92,13 @@ fetchData()
                 </div>
                 
                 <div className="text-sm flex gap-2">
-                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer"><span className="font-bold">{dbUser?.followers.length}</span>followers </span>
-                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer"> <span className="font-bold">{dbUser?.following.length}</span>following</span>
+                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer" onClick={()=>setShowFollowers({show:true,type:'followers'})}><span className="font-bold">{dbUser?.followers.length}</span>followers </span>
+                  <span className="p-1 flex gap-[1px] hover:underline cursor-pointer" onClick={()=>setShowFollowers({show:true,type:'following'})}> <span className="font-bold">{dbUser?.following.length}</span>following</span>
                 </div>
         
+            </div>
+            <div className={`${showFollowers.show?'block':'hidden'}`}>
+              <FollowersPopup updateUi={fetchFollowers} type={showFollowers.type} users={showFollowers.type ==='followers'?followers:following} handleClose={()=>setShowFollowers({show:false,type:'followers'})}/>
             </div>
             <div className={`${showEditMenu?'block':'hidden'}`}>
             < EditMyProfilePop closeMenu={()=>setShowEditMenu(false)}/>

@@ -160,7 +160,7 @@ const Login = () => {
         <h5 className="text-[13px]">{mode==='login'?'Stay updated on your professional world.':"Make the most of your professional life."}</h5>
         <p className="text-[12px] bg-red-700  text-white">{errorSubmit}</p>
         <form className="my-3 flex flex-col" onSubmit={handleSubmit}>
-            {mode==='signup' && (<input type="text" onChange={(e)=>setUserName(e.target.value)} value={userName} name="userName" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="userName" />)}
+            {mode==='signup' && (<input type="text" onChange={(e)=>setUserName(e.target.value)} value={userName} name="userName" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="userName" maxLength={10} />)}
             <input type="text" onChange={handleChange} value={formData.email} name="email" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="Email" />
             <input type="password" onChange={handleChange} value={formData.password} name="password" className="text-2xl border-[1px] border-black p-3 mb-3" placeholder="Password" />
             <div className="">
