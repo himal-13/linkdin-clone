@@ -83,7 +83,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
     } finally {
       setLoading(false);
     }
-  }, [user!.uid, user, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
+  }, [ user, post.id, post.likes, post.likedBy, likedBy, navigate, postUpdated]);
 
 
 
