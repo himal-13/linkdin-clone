@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { arrayRemove, arrayUnion, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../services/Firebase"
 import { usePostsContext } from "../../context/PostActionContext"
+import { Link } from "react-router-dom"
 
 
 interface Props{
@@ -70,7 +71,7 @@ const Comment = ({comment,post}:{comment:Props,post:PostType}) => {
         <header className="w-full px-2 flex justify-between items-center">
             <section className="flex gap-2 items-center">
                 <MdAccountBox className="text-xl"/>
-                <span>{comment.commentBy}</span>
+                <Link to={`/user/${comment.commentBy}`}><span>{comment.commentBy}</span></Link>
             </section>
             {post.userId === dbUser?.userName || comment.commentBy === dbUser?.userName ? <BsThreeDots onClick={()=>setShowCommentMenu(!showCommentMenu)} className="cursor-pointer p-1 text-2xl"/>:<></>}
             {

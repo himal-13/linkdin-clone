@@ -8,7 +8,7 @@ import { CiLogout } from "react-icons/ci";
 import { MdAccountCircle } from "react-icons/md";
 
 const Leftbar = () => {
-  const{user} = useAuth()
+  const{user,dbUser} = useAuth()
   const navigate = useNavigate()
 
   useEffect(()=>{
@@ -23,12 +23,12 @@ const Leftbar = () => {
         <div className="text-center absolute top-[5vh] left-[50%] -translate-x-1/2 flex flex-col justify-center items-center">
             <MdAccountCircle className="text-7xl bg-white rounded-full" />
 
-            <Link to={'/profile'}><h4 className="font-bold cursor-pointer hover:underline">{user?.email}</h4></Link>
-            <h5 className="text-[14px]">Fullstack Developer</h5>
+            <Link to={'/profile'}><h4 className="font-bold cursor-pointer hover:underline">{dbUser?.userName}</h4></Link>
+            <h5 className="text-[14px]">{dbUser?.userDetails.bio}</h5>
         </div>
         <div className="mt-[25vh] border-t-2 border-b-2 text-[14px] py-5">
-            <p className="flex justify-between mx-4"><span>Profile view</span> <span className="font-bold">50</span></p>
-            <p className="flex justify-between mx-4"><span>Post impression</span> <span className="font-bold">238</span></p>
+            <p className="flex justify-between mx-4"><span>Followers</span> <span className="font-bold">{dbUser?.followers.length}</span></p>
+            <p className="flex justify-between mx-4"><span>Following</span> <span className="font-bold">{dbUser?.following.length}</span></p>
 
         </div>
         <div className="">

@@ -4,7 +4,7 @@ import { BiPhotoAlbum, BiText } from "react-icons/bi"
 import { GrArticle } from "react-icons/gr"
 import { db } from "../../services/Firebase"
 import { useAuth } from "../../context/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { MdAccountCircle } from "react-icons/md"
 
 const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
@@ -56,7 +56,7 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
   return (
     <div className="bg-white p-5 w-full border-b-[.5px] border-gray-400">
         <section className="flex gap-4 w-full ">
-              <MdAccountCircle className="text-5xl" /> 
+              <Link to={`/user/${dbUser?.userName}`}><MdAccountCircle className="text-5xl" /></Link>
               {addPostMode?(
                 <div className="flex w-full gap-2">
                   <input type="text" placeholder="Add your content" value={postInput} onChange={(e)=>setPostInput(e.target.value)} className="px-3 rounded-full border-2 border-black flex-1 text-start font-bold" />

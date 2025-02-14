@@ -95,7 +95,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <section className="flex items-center gap-2">
             <MdAccountBox className="text-3xl" />
             {post.rePostedby == dbUser?.userName?(
-            <Link to={`/${post.rePostedby}`}> <span className="text-sm">{post.rePostedby}</span></Link>
+            <Link to={`/user/${post.rePostedby}`}> <span className="text-sm">{post.rePostedby}</span></Link>
 
             ):<span className="text-sm">{post.rePostedby}</span>}
             <FollowingBtn postedBy={post.rePostedby} />
@@ -112,7 +112,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
           <MdAccountBox className="text-3xl" />
           <div className="flex flex-col justify-center ">
             <div className="flex gap-2 items-center">
-              {post.userId === dbUser?.userName? <span className="text-[15px] ">{post.userId} </span>: <Link to={`${post.userId}`}><span className="text-[15px] ">{post.userId} </span></Link>}
+              {post.userId === dbUser?.userName? <span className="text-[15px] ">{post.userId} </span>: <Link to={`/user/${post.userId}`}><span className="text-[15px] ">{post.userId} </span></Link>}
               <FollowingBtn postedBy={post.userId}/>
             </div>
             <div className="flex gap-1 items-center -my-2">

@@ -1,14 +1,4 @@
-header nav{
-    color:#555;
-    cursor: pointer;
-    font-weight: 700;
-}
-header nav:hover{
-    color: black;
-}
-.search-icon{
-    display: none;
-}
+
 
 @media screen and (max-width:700px){
     .header{

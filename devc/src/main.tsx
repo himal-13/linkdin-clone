@@ -11,6 +11,8 @@ import PostPage from './pages/PostPage.tsx'
 import PostProvider from './context/PostActionContext.tsx'
 import Post404 from './pages/Post404.tsx'
 import Error404 from './pages/Error404.tsx'
+import Messages from './pages/Messages.tsx'
+import Notification from './pages/Notifications.tsx'
 
 
 const router = createBrowserRouter([
@@ -18,6 +20,18 @@ const router = createBrowserRouter([
   {
     path:'/',
     element:<App/>,
+    errorElement:<Error404/>
+
+  },
+  {
+    path:'/messages',
+    element:<Messages/>,
+    errorElement:<Error404/>
+
+  },
+  {
+    path:'/notification',
+    element:<Notification/>,
     errorElement:<Error404/>
 
   },
@@ -33,7 +47,7 @@ const router = createBrowserRouter([
     errorElement:<Error404/>
   },
   {
-    path:'/:userId',
+    path:'/user/:userId',
     element:<UserProfile/>,
     errorElement:<Error404/>
 
