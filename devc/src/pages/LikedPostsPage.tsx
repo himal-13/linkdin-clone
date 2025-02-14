@@ -55,7 +55,7 @@ const LikedPostsPage = () => {
    <div className="min-h-screen w-screen bg-gray-400">
     <Navbar/>
     <main className=" mx-auto min-h-screen pt-[11vh] px-4 bg-white sm:w-[60%] lg:w-[40%]">
-    <h1 className="text-3xl font-bold p-2 border-b-[1px] border-gray-300">Saved Posts</h1>
+    <h1 className="text-3xl font-bold p-2 border-b-[1px] border-gray-300">Liked Posts</h1>
     {loading?<h1>loading...</h1>:(
     <div className="">
       {likedPosts.length !== 0? likedPosts.map((post)=>(
