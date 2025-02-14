@@ -78,7 +78,8 @@ fetchFollowers()
         <Navbar/>
         <main className="bg-gray-300 w-screen min-h-screen flex justify-center">
           <main className=" pt-[10vh] px-4 sm:px-1 w-[100%] sm:w-[60%] md:w-[40%] bg-white min-h-screen ">
-            <div className="text-center relative top-3  p-4 border-b-[1px] border-gray-200">
+            <div className="text-center relative top-3 border-b-[1px] border-gray-200">
+              <div className="p-4">
                 <div className="flex justify-between ">
                   <MdAccountCircle className="text-7xl" />  
                   <button className="p-2 border-[1px] border-black font-bold self-end text-sm rounded-lg" onClick={()=>setShowEditMenu(true)}>edit profile</button>
@@ -96,6 +97,7 @@ fetchFollowers()
                   <span className="p-1 flex gap-[1px] hover:underline cursor-pointer" onClick={()=>setShowFollowers({show:true,type:'following'})}> <span className="font-bold">{dbUser?.following.length}</span>following</span>
                 </div>
         
+            </div>
             </div>
             <div className={`${showFollowers.show?'block':'hidden'}`}>
               <FollowersPopup updateUi={fetchFollowers} type={showFollowers.type} users={showFollowers.type ==='followers'?followers:following} handleClose={()=>setShowFollowers({show:false,type:'followers'})}/>

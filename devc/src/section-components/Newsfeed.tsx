@@ -67,7 +67,7 @@ const Newsfeed = () => {
     },[])
 
   return (
-    <div className="min-h-screen w-[40%] ">
+    <div className="min-h-screen sm:w-[60%] lg:w-[40%] ">
         <UserAddPost handleLoading={async()=>{await fetchPost()}}/>
         <Divider/>
         {loading?(

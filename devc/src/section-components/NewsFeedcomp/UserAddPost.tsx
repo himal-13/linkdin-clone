@@ -54,12 +54,12 @@ const UserAddPost = ({handleLoading}:{handleLoading:()=>Promise<void>}) => {
 
   }
   return (
-    <div className="bg-white p-5 w-full border-b-[.5px] border-gray-400">
-        <section className="flex gap-4 w-full ">
-              <Link to={`/user/${dbUser?.userName}`}><MdAccountCircle className="text-5xl" /></Link>
+    <div className="bg-white py-5 w-[95%] px-2 mx-auto border-b-[.5px] border-gray-400">
+        <section className="flex gap-2 w-full ">
+              <Link to={`/profile`}><MdAccountCircle className="text-5xl" /></Link>
               {addPostMode?(
                 <div className="flex w-full gap-2">
-                  <input type="text" placeholder="Add your content" value={postInput} onChange={(e)=>setPostInput(e.target.value)} className="px-3 rounded-full border-2 border-black flex-1 text-start font-bold" />
+                  <input type="text" placeholder="Add your content" value={postInput} onChange={(e)=>setPostInput(e.target.value)} className="pl-3 rounded-full border-2 border-black flex-1 text-start font-bold" />
                   {loading?<p className="bg-gray-400 px-3 h-5/6 rounded-sm relative self-center my-auto">Post</p>:(
                     <button onClick={()=>addPost()} className="bg-blue-700 px-3 h-5/6 rounded-sm hover:bg-blue-500 relative text-white">Post</button>
 

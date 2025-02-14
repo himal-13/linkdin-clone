@@ -18,7 +18,7 @@ const Leftbar = () => {
 
 
   return (
-    <section className="w-[300px] bg-white h-fit relative rounded-2xl">
+    <section className="w-[300px] bg-white h-fit relative rounded-2xl hidden sm:block">
 {user?(
     <>
           <div className="h-[8vh] bg-stone-500"></div>
