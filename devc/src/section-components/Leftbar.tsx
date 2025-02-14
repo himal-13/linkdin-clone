@@ -1,21 +1,15 @@
-import { GiSaveArrow } from "react-icons/gi"
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/Firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
 import { MdAccountCircle } from "react-icons/md";
+import { FaBookmark } from "react-icons/fa";
+import { BiSolidLike } from "react-icons/bi";
 
 const Leftbar = () => {
   const{user,dbUser} = useAuth()
   const navigate = useNavigate()
-
-  useEffect(()=>{
-    console.log(user)
-
-  },[])
-
 
   return (
     <section className="w-[300px] bg-white h-fit relative rounded-2xl hidden sm:block">
@@ -34,7 +28,8 @@ const Leftbar = () => {
   
           </div>
           <div className="">
-              <button className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100" ><GiSaveArrow /> <span>Saved post</span></button>
+              <button onClick={()=>navigate('/savedposts')} className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100" ><FaBookmark /><span>Saved post</span></button>
+              <button onClick={()=>navigate('/likedposts')} className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100" > <BiSolidLike /><span>Liked Post</span></button>
               <button className="flex gap-1 justify-center items-center w-full py-2 hover:bg-gray-100 hover:rounded-lg" onClick={async()=>{await signOut(auth); navigate('/login')}}><CiLogout/> <span>Log out</span></button>
           </div>
   

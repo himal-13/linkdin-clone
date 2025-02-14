@@ -76,7 +76,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
       });
       postUpdated();
     } catch (error) {
-      console.error("Like update failed:", error);
+      // console.error("Like update failed:", error);
       // Rollback on error
       setLikes(post.likes);
       setLikedBy(post.likedBy || []);

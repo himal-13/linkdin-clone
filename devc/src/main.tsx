@@ -13,6 +13,8 @@ import Post404 from './pages/Post404.tsx'
 import Error404 from './pages/Error404.tsx'
 import Messages from './pages/Messages.tsx'
 import Notification from './pages/Notifications.tsx'
+import SavedPostPage from './pages/SavedPostPage.tsx'
+import LikedPostsPage from './pages/LikedPostsPage.tsx'
 
 
 const router = createBrowserRouter([
@@ -55,6 +57,16 @@ const router = createBrowserRouter([
   {
     path:'/post/:id',
     element:<PostPage/>,
+    errorElement:<Post404/>
+  },
+  {
+    path:'/savedposts',
+    element:<SavedPostPage/>,
+    errorElement:<Post404/>
+  },
+  {
+    path:'/likedposts',
+    element:<LikedPostsPage/>,
     errorElement:<Post404/>
   }
 

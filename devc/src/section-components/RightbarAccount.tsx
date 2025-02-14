@@ -47,7 +47,7 @@ const addFollowing = async()=>{
     <div className="flex gap-2 items-center m-2 border-[.1px] border-gray-200 ">
             <MdAccountBox className="text-4xl"/>
             <div className="flex flex-col text-sm">
-                <Link to={`/${user.userName}`}><span>{user.userName}</span></Link>
+                <Link to={`/user/${user.userName}`}><span>{user.userName}</span></Link>
                 <span className="text-xs">{user.followers.length} followers</span>
             </div>
             <div className="flex p-2 items-center gap-2 ">
