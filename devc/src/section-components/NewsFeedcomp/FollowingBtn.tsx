@@ -3,11 +3,13 @@ import { dbUserType, useAuth } from "../../context/AuthContext"
 import { arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../services/Firebase"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const FollowingBtn = ({postedBy}:{postedBy:string}) => {
     const{dbUser,fetchdbUser,user,alldbUser} = useAuth()
     const[isFollowing,setIsFollowing] = useState<boolean | undefined>()
     const[isMe,setisMe] = useState<boolean | undefined>()
+    const navigate = useNavigate()
 
     useEffect(()=>{
         if(dbUser && user){
@@ -27,7 +29,7 @@ const FollowingBtn = ({postedBy}:{postedBy:string}) => {
 
     const handleFollow =async()=>{
         if(!dbUser || !alldbUser){
-            console.log('dbUser is no')
+            navigate('/login')
             return;
         }
         const followingdbUser:dbUserType | undefined = alldbUser?.find((u)=>u.userName ===postedBy)

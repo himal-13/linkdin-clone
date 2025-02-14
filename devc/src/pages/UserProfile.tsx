@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PostType } from "../section-components/Newsfeed";
 import { arrayRemove, arrayUnion, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../services/Firebase";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { GrLocation } from "react-icons/gr";
 import OtherFollowersPopup from "./components/OtherFollowersPop";
 import { BsEmojiExpressionless } from "react-icons/bs";
@@ -27,10 +27,13 @@ const UserProfile = () => {
   const[following,setFollowing] = useState<dbUserType[] | []>([])
   const[isFollowing,setIsFollowing] = useState<boolean | undefined>()
   const[showUnfollowDialog,setShowUnfollowDialog] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const fetchUserData=async()=>{
     if(alldbUser){
       setCurrentdbUser(alldbUser.find((data)=>data.userName === params.userId))
+    }else{
+      navigate('/login')
     }
   
   }
@@ -82,6 +85,8 @@ fetchData()
     }finally{
       setLoading(false)
     }
+    }else{
+
     }
   }
 

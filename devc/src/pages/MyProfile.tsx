@@ -59,12 +59,12 @@ const Profile = () => {
   useEffect(()=>{
 
     const fetchData =async()=>{
-      if(!user && !loading){
+      if(user ){
+        await  fetchPosts()
+
+      }else{
         navigate('/login')
-        return;
       }
-    await  fetchPosts()
-    console.log('myposts',myPosts)
 
 
     }

@@ -5,15 +5,20 @@ import { MdAccountBox, MdCancel } from "react-icons/md"
 import { useAuth } from "../../context/AuthContext"
 import { addDoc, collection, doc, increment, updateDoc } from "firebase/firestore"
 import { db } from "../../services/Firebase"
+import { useNavigate } from "react-router-dom"
 
 const RePost = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
     const[showRepostDialog,setShowRepostDialog] = useState(false)
     const[repostTitle,setRepostTitle] = useState('')
+    const navigation = useNavigate()
     const{user,dbUser} = useAuth()
     
 
     const handlePostClick = async()=>{
-        if(!dbUser) return;
+        if(!dbUser) {
+            navigation('/login')
+            return;
+        };
         try{
             setShowRepostDialog(false)
             await addDoc(collection(db, "posts"), {

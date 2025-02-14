@@ -4,20 +4,23 @@ import { PostType } from "../Newsfeed"
 import { MdAccountBox } from "react-icons/md"
 import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { db } from "../../services/Firebase"
+import { useNavigate } from "react-router-dom"
 
 const CommentBtn = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
     const[commentInput,setCommentInput] = useState('')
-    const{user} = useAuth()
+    const navigate = useNavigate()
+    const{dbUser} = useAuth()
 
     const handleAddComment =async()=>{
-        if(user && commentInput){
+        if(commentInput.trim() === '')return;
+        if(dbUser){
             setCommentInput('')
             try{
                 const commentRef  = collection(db,'posts',post.id,'comments')
                 await addDoc(commentRef,{
                     content:commentInput,
                     likedBy:[],
-                    commentBy:user.displayName,
+                    commentBy:dbUser.userName,
                     createdAt:serverTimestamp()           
 
             })
@@ -26,6 +29,8 @@ const CommentBtn = ({post,updatePost}:{post:PostType,updatePost:()=>void}) => {
             }catch(e){
                 // console.log('eror while commenting',e)
             }
+        }else{
+            navigate('/login')
         }
 
     }
