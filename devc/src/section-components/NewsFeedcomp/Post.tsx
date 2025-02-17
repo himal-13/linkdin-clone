@@ -126,7 +126,7 @@ const Post = ({ post, postUpdated }: { post: PostType; postUpdated: () => void }
         </section>
         {!post.isReposted && <PostThreeDot updatePost={postUpdated} post={post}/>}
       </header>
-        <Link to={`/post/${post.id}`}><p className="my-2 text-2xl">{post.content}</p> </Link>     
+        <Link to={`/post/${post.id}`}><p className="my-2 text-2xl px-2 overflow-hidden">{post.content}</p> </Link>     
       </div>
 
       <main>
