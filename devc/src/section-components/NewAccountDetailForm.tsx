@@ -43,16 +43,22 @@ const NewAccountDetailForm = ({setHide}:{setHide:()=>void}) => {
   };
 
   const handleAutoFill = () => {
-    setAutoFill(!autoFill)
-    if(autoFill){
-      setLocation('California, USA')
-      setStudy('Harvard University')
-      setWork('Microsoft')
-    }else{
-        setLocation('')
-        setStudy('')
-        setWork('')
-    }
+    setAutoFill((prevValue)=>{
+      const newValue= !prevValue;
+      if(newValue){
+        setLocation('California, USA')
+        setStudy('Harvard University')
+        setWork('Microsoft')
+      }else{
+          setLocation('')
+          setStudy('')
+          setWork('')
+      }
+
+      return newValue;
+    })
+ 
+
   }
 
   const handleSubmit = async() => {
@@ -131,7 +137,7 @@ const NewAccountDetailForm = ({setHide}:{setHide:()=>void}) => {
               {/* Step 2 */}
               <div className="w-full flex-shrink-0 px-4">
                 <div className="flex gap-1 items-center cursor-pointer float-end" onClick={handleAutoFill}>
-                   {autoFill?<MdOutlineCheckBoxOutlineBlank className="text-2xl" />:<MdOutlineCheckBox className="text-2xl"/>}
+                   {autoFill?<MdOutlineCheckBox className="text-2xl"/>:<MdOutlineCheckBoxOutlineBlank className="text-2xl" />}
                     <span>Auth fill</span>
                 </div>
                 <div className="mb-4">

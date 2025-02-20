@@ -12,6 +12,7 @@ interface AuthContextType{
     dbUser:dbUserType | undefined,
     fetchdbUser:()=>void,
     alldbUser:dbUserType[] | undefined,
+    userLoading:boolean
 
 
 }
@@ -42,18 +43,18 @@ export const AuthContext = createContext<AuthContextType | null>(null)
 
  const AuthProvider:React.FC<AuthProviderType> =({children})=>{
     const[user,setUser] = useState< User |null>(null)
-    const[loading,setLoading] = useState(true)
+    const[userLoading,setUserLoading] = useState(true)
     const[alldbUser,setAlldbUser] = useState<dbUserType[] | undefined>()
     const[dbUser,setdbUser] = useState<dbUserType | undefined>()
 
     useEffect(()=>{
-        setLoading(true)
+        setUserLoading(true)
         const unSubscribe = onAuthStateChanged(auth,(curentUser)=>{
             setUser(curentUser)
-
+        
         })
     
-        setLoading(false)
+        setUserLoading(false)
 
         return ()=>unSubscribe()
 
@@ -74,12 +75,12 @@ export const AuthContext = createContext<AuthContextType | null>(null)
     
     useEffect(()=>{
         fetchdbUser()
-
+     
     },[user])
 
     return(
-        <AuthContext.Provider value={{user,dbUser,fetchdbUser,alldbUser}}>
-            {!loading && children}
+        <AuthContext.Provider value={{user,dbUser,fetchdbUser,alldbUser,userLoading}}>
+            {!userLoading && children}
         </AuthContext.Provider>
         
        
